@@ -1,11 +1,24 @@
+import { useEffect } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { Button, FlatList, StyleSheet, Switch, View, Alert, SafeAreaProvider } from 'react-native';
+import { ActivityIndicator, MD2Colors, BottomNavigation, Text, Appbar } from 'react-native-paper';
+
 
 export default function App() {
+
+
+
+
+  useEffect(() => {
+
+  }, [])
+
+  console.log("hi  3 4")
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+    <View>
+      <Text>Hi</Text>
     </View>
   );
 }
@@ -13,8 +26,8 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: 'blue',
+    flexDirection: 'column-reverse'
   },
 });
+
