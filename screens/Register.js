@@ -18,7 +18,7 @@ const Register = (props) => {
                     </View>
                     <View style={{ flex: 55, alignItems: 'center' }}>
 
-                        <View style={{ flex: 40, backgroundColor: 'white' }}>
+                        <View style={{ flex: 40 }}>
                             <Text style={{ marginVertical: 2 }}>Email</Text>
                             <TextInput placeholder="Vui lòng nhập email" style={{
                                 color: 'blue',
