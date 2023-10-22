@@ -1,7 +1,7 @@
 import { Text, View, Image, TextInput, Button, TouchableOpacity } from "react-native";
 
 
-const Login = (props) => {
+const Login = ({ navigation }) => {
     return (
         <View style={{ flex: 1, margin: 10 }}>
             <View style={{ flex: 35, alignItems: 'center', justifyContent: 'center' }}>
@@ -45,7 +45,7 @@ const Login = (props) => {
                     <Text style={{ marginVertical: 2, color: 'red' }}>Vui lòng nhập password</Text>
                 </View>
                 <View style={{ flex: 40, marginTop: 20 }}>
-                    <TouchableOpacity style={{
+                    <TouchableOpacity onPress={() => navigation.navigate('MainScreen')} style={{
                         height: 45,
                         width: 360,
                         alignItems: "center",
@@ -57,7 +57,7 @@ const Login = (props) => {
                     </TouchableOpacity>
                     <View style={{ textAlign: 'center', margin: 10, alignItems: 'center', justifyContent: 'center', flexDirection: 'row' }}>
                         <Text style={{ fontSize: 14, color: '#11374C', fontWeight: 'bold' }}>Bạn đã có tài khoản chưa?</Text>
-                        <TouchableOpacity style={{ marginLeft: 5 }} >
+                        <TouchableOpacity onPress={() => navigation.navigate('Register')} style={{ marginLeft: 5 }} >
                             <Text style={{ color: '#F46722', textAlign: 'center', fontWeight: 'bold' }}>Đăng ký ngay</Text>
                         </TouchableOpacity>
 
