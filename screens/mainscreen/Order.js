@@ -4,6 +4,9 @@ import { Appbar, IconButton } from 'react-native-paper';
 import { ScrollView } from "react-native";
 import { useState } from "react";
 import { Picker } from "@react-native-picker/picker";
+import AlreadyGet from "../order_screen_components/AlreadyGet";
+import NotGet from "../order_screen_components/NotGet"
+import Sample from "../order_screen_components/Sample"
 
 
 const Order = () => {
@@ -68,23 +71,7 @@ const Order = () => {
 
 
             </View>
-            <View style={{ flex: 1, backgroundColor: '#F1F1F1', marginTop: 10 }}>
-                <View style={{ margin: 10, flexDirection: 'row', alignItems: 'center' }}>
-                    <View style={{ height: 50, justifyContent: 'center' }}>
-                        <Text style={{ marginRight: 15, fontSize: 15, fontWeight: 'bold', color: '#606060' }}>Tổng hợp</Text>
-                    </View>
-                    <View style={{ flex: 1, borderRadius: 15, borderWidth: 2, borderColor: "#19374F" }}>
-                        <Picker style={{ flex: 1 }} >
-                            <Picker.Item style={{ fontSize: 14, color: '"#19374F"', fontWeight: '900' }} label="Chọn Quận/Huyện" value={''} ></Picker.Item>
-                        </Picker>
-
-                    </View>
-
-
-
-
-                </View>
-            </View>
+            {isChoosen === 0 ? <AlreadyGet /> : isChoosen === 1 ? <NotGet /> : <Sample />}
 
             <IconButton color="#FFFF" onPress={() => { console.log('them') }} icon={"plus"} size={36} style={{ position: "absolute", bottom: 5, right: 10, backgroundColor: '#F26754' }}>
 
