@@ -18,7 +18,7 @@ const Order = () => {
             <View >
                 <View style={{ marginTop: 15 }}>
                     <View style={{ alignItems: 'center', height: 60, flexDirection: 'row' }}>
-                        <Text style={{ marginLeft: 10, fontSize: 16, fontWeight: 'bold', color: '#01466D' }}>
+                        <Text style={{ marginLeft: 10, fontSize: 20, fontWeight: 'bold', color: '#01466D' }}>
                             Quản lý đơn hàng
                         </Text>
                         <View style={{ flex: 1 }}></View>
