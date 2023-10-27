@@ -5,11 +5,11 @@ import Loading from "./Loading";
 import { getAllProvince, getDistrictById } from "../services/addressService";
 
 
-const Register = ({ navigation }) => {
+const Register = ({ route, navigation }) => {
     const [isLoading, setIsLoading] = useState(true)
 
 
-
+    console.log(route.params)
     // state quản lý input
 
     const [email, setEmail] = useState('')

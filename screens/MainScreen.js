@@ -27,7 +27,7 @@ const MainScreen = ({ navigation }) => {
         Chat: Chat,
         Reconciliation: Reconciliation,
         Complain: Complain,
-        User: User
+        User: () => <User navigation={navigation} />
     });
 
     return (
