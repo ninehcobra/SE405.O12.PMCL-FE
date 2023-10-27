@@ -1,6 +1,7 @@
 import { View, Text } from "react-native"
 import { Picker } from "@react-native-picker/picker"
 
+
 const AlreadyGet = () => {
     return (
         <View style={{ flex: 1, backgroundColor: '#F1F1F1', marginTop: 10 }}>
@@ -16,51 +17,52 @@ const AlreadyGet = () => {
                 </View>
 
             </View>
-            <View style={{ backgroundColor: 'aqua', margin: 10, borderRadius: 15 }}>
-                <View style={{ flexDirection: 'row', padding: 10 }}>
-                    <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Tổng đơn hàng GHLE đã lấy</Text>
+
+            <View style={{ margin: 10, borderWidth: 1, borderRadius: 15, borderColor: '#CCCCCC' }}>
+                <View style={{ flexDirection: 'row', marginHorizontal: 10, borderBottomColor: "#CCCCCC", borderBottomWidth: 1, paddingVertical: 10 }}>
+                    <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#19374F' }}>Tổng đơn hàng GHLE đã lấy</Text>
                     <View style={{ flex: 1 }} />
-                    <Text style={{ fontSize: 16, fontWeight: 'bold' }}>0  ĐH</Text>
+                    <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#19374F' }}>0  ĐH</Text>
                 </View>
-                <View style={{ flexDirection: 'row', padding: 10, marginLeft: 15 }}>
-                    <Text style={{ fontSize: 16, fontWeight: '500' }}>Đang xử lý</Text>
+                <View style={{ flexDirection: 'row', marginHorizontal: 10, marginLeft: 25, paddingVertical: 10, borderBottomColor: "#CCCCCC", borderBottomWidth: 1 }}>
+                    <Text style={{ fontSize: 16, fontWeight: '500', color: '#575757' }}>Đang xử lý</Text>
                     <View style={{ flex: 1 }} />
-                    <Text style={{ fontSize: 16, fontWeight: '500' }}>0  ĐH</Text>
+                    <Text style={{ fontSize: 16, fontWeight: '500', color: '#575757' }}>0  ĐH</Text>
                 </View>
-                <View style={{ flexDirection: 'row', padding: 10, marginLeft: 15 }}>
-                    <Text style={{ fontSize: 16, fontWeight: '500' }}>Đang giao hàng</Text>
+                <View style={{ flexDirection: 'row', marginHorizontal: 10, marginLeft: 25, paddingVertical: 10, borderBottomColor: "#CCCCCC", borderBottomWidth: 1 }}>
+                    <Text style={{ fontSize: 16, fontWeight: '500', color: '#575757' }}>Đang giao hàng</Text>
                     <View style={{ flex: 1 }} />
-                    <Text style={{ fontSize: 16, fontWeight: '500' }}>0  ĐH</Text>
+                    <Text style={{ fontSize: 16, fontWeight: '500', color: '#575757' }}>0  ĐH</Text>
                 </View>
-                <View style={{ flexDirection: 'row', padding: 10, marginLeft: 15 }}>
-                    <Text style={{ fontSize: 16, fontWeight: '500' }}>Chờ xác nhận giao lại</Text>
+                <View style={{ flexDirection: 'row', marginHorizontal: 10, marginLeft: 25, paddingVertical: 10, borderBottomColor: "#CCCCCC", borderBottomWidth: 1 }}>
+                    <Text style={{ fontSize: 16, fontWeight: '500', color: '#F46624' }}>Chờ xác nhận giao lại</Text>
                     <View style={{ flex: 1 }} />
-                    <Text style={{ fontSize: 16, fontWeight: '500' }}>0  ĐH</Text>
+                    <Text style={{ fontSize: 16, fontWeight: '500', color: '#F46624' }}>0  ĐH</Text>
                 </View>
-                <View style={{ flexDirection: 'row', padding: 10, marginLeft: 15 }}>
-                    <Text style={{ fontSize: 16, fontWeight: '500' }}>Đã giao hàng & chưa ck</Text>
+                <View style={{ flexDirection: 'row', marginHorizontal: 10, marginLeft: 25, paddingVertical: 10, borderBottomColor: "#CCCCCC", borderBottomWidth: 1 }}>
+                    <Text style={{ fontSize: 16, fontWeight: '500', color: '#575757' }}>Đã giao hàng & chưa ck</Text>
                     <View style={{ flex: 1 }} />
-                    <Text style={{ fontSize: 16, fontWeight: '500' }}>0  ĐH</Text>
+                    <Text style={{ fontSize: 16, fontWeight: '500', color: '#575757' }}>0  ĐH</Text>
                 </View>
-                <View style={{ flexDirection: 'row', padding: 10, marginLeft: 15 }}>
-                    <Text style={{ fontSize: 16, fontWeight: '500' }}>Đã đối soát & ck thành công</Text>
+                <View style={{ flexDirection: 'row', marginHorizontal: 10, marginLeft: 25, paddingVertical: 10, borderBottomColor: "#CCCCCC", borderBottomWidth: 1 }}>
+                    <Text style={{ fontSize: 16, fontWeight: '500', color: '#575757' }}>Đã đối soát & ck thành công</Text>
                     <View style={{ flex: 1 }} />
-                    <Text style={{ fontSize: 16, fontWeight: '500' }}>0  ĐH</Text>
+                    <Text style={{ fontSize: 16, fontWeight: '500', color: '#575757' }}>0  ĐH</Text>
                 </View>
-                <View style={{ flexDirection: 'row', padding: 10, marginLeft: 15 }}>
-                    <Text style={{ fontSize: 16, fontWeight: '500' }}>Đang hoàn thành</Text>
+                <View style={{ flexDirection: 'row', marginHorizontal: 10, marginLeft: 25, paddingVertical: 10, borderBottomColor: "#CCCCCC", borderBottomWidth: 1 }}>
+                    <Text style={{ fontSize: 16, fontWeight: '500', color: '#575757' }}>Đang hoàn thành</Text>
                     <View style={{ flex: 1 }} />
-                    <Text style={{ fontSize: 16, fontWeight: '500' }}>0  ĐH</Text>
+                    <Text style={{ fontSize: 16, fontWeight: '500', color: '#575757' }}>0  ĐH</Text>
                 </View>
-                <View style={{ flexDirection: 'row', padding: 10, marginLeft: 15 }}>
-                    <Text style={{ fontSize: 16, fontWeight: '500' }}>Hoàn hàng thành công</Text>
+                <View style={{ flexDirection: 'row', marginHorizontal: 10, marginLeft: 25, paddingVertical: 10, borderBottomColor: "#CCCCCC", borderBottomWidth: 1 }}>
+                    <Text style={{ fontSize: 16, fontWeight: '500', color: '#575757' }}>Hoàn hàng thành công</Text>
                     <View style={{ flex: 1 }} />
-                    <Text style={{ fontSize: 16, fontWeight: '500' }}>0  ĐH</Text>
+                    <Text style={{ fontSize: 16, fontWeight: '500', color: '#575757' }}>0  ĐH</Text>
                 </View>
-                <View style={{ flexDirection: 'row', padding: 10, marginLeft: 15 }}>
-                    <Text style={{ fontSize: 16, fontWeight: '500' }}>Hàng thất lạc - hư hỏng</Text>
+                <View style={{ flexDirection: 'row', marginHorizontal: 10, marginLeft: 25, paddingVertical: 10 }}>
+                    <Text style={{ fontSize: 16, fontWeight: '500', color: '#575757' }}>Hàng thất lạc - hư hỏng</Text>
                     <View style={{ flex: 1 }} />
-                    <Text style={{ fontSize: 16, fontWeight: '500' }}>0  ĐH</Text>
+                    <Text style={{ fontSize: 16, fontWeight: '500', color: '#575757' }}>0  ĐH</Text>
                 </View>
 
             </View>
