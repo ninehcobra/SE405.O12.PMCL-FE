@@ -4,9 +4,9 @@ import { Appbar, IconButton } from 'react-native-paper';
 import { ScrollView } from "react-native";
 import { useState } from "react";
 import { Picker } from "@react-native-picker/picker";
-import AlreadyGet from "../order_screen_components/AlreadyGet";
-import NotGet from "../order_screen_components/NotGet"
-import Sample from "../order_screen_components/Sample"
+import AlreadyGet from "../../components/order_screen_components/AlreadyGet";
+import NotGet from "../../components/order_screen_components/NotGet"
+import Sample from "../../components/order_screen_components/Sample"
 
 
 const Order = () => {

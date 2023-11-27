@@ -72,6 +72,7 @@ const Reconciliation = () => {
                     <Text style={{ color: "#01466D", fontSize: 18, fontWeight: 'bold' }}>tin tìm kiếm</Text>
                 </View>
             </View>
+
         </View >
     )
 }

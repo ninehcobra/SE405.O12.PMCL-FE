@@ -1,25 +1,33 @@
-import axios from 'axios';
+import axios from '../setup/axios';
 
 
-const getTest = async () => {
-    fetch('https://example.com/api/data', {
-        method: 'GET',
-        mode: 'no-cors',
-        headers: {
-            'Content-Type': 'application/json',
-            // Other headers if needed
-        }
-    })
-        .then(response => {
-            return (response)
+const handleRegister = async (data) => {
+    try {
+
+        let res = await axios.post('/api/register', data)
+        return res
+    } catch (error) {
+        return ({
+            EC: -5,
+            EM: 'Something wrong when connect to server'
         })
-        .catch(error => {
-            return (error)
-        });
+    }
+};
 
+const handleLogin = async (data) => {
+    try {
 
+        let res = await axios.post('/api/login', data)
+        return res
+    } catch (error) {
+        return ({
+            EC: -5,
+            EM: 'Something wrong when connect to server'
+        })
+    }
 };
 
 export {
-    getTest
+    handleRegister,
+    handleLogin
 };

@@ -1,17 +1,146 @@
 import { Text, View, Image, TextInput, Button, TouchableOpacity, ScrollView } from "react-native";
 import { StackActions } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
+import { useState } from "react";
+import { handleLogin } from "../services/userService";
+import { useDispatch, useSelector } from 'react-redux'
+import SyncStorage from 'sync-storage';
+import { loginRedux } from '../redux/actions/updateAction'
 
-const Login = ({ navigation }) => {
-    const handleLogin = () => {
-        // navigation.dispatch(StackActions.replace('MainScreen'))
-        Toast.show({
-            type: 'error',
-            text1: 'Hello',
-            text2: 'This is some something 👋',
-            position: 'bottom'
-        })
+const Login = ({ route, navigation }) => {
+    const dispatch = useDispatch()
+    const [isValid, setIsValid] = useState(true)
+
+    // const checkValidation = () => {
+    //     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    //     const passwordRegex = /^.{6,}$/;
+    //     if (email && password) {
+    //         if (emailRegex.test(email) && passwordRegex.test(password)) {
+    //             setIsValid(true)
+    //             return true
+    //         }
+    //         else {
+    //             setIsValid(false)
+    //             return false
+    //         }
+    //     }
+    //     else {
+    //         setIsValid(false)
+    //         return false
+    //     }
+    // }
+
+    const handleOnLogin = async () => {
+        // if (checkValidation()) {
+        //     Toast.show({
+        //         type: 'success',
+        //         text1: 'Hello',
+        //         text2: `xam`,
+        //         position: 'bottom'
+        //     })
+        // }
+
+        try {
+            let res = await handleLogin({
+                email: email,
+                password: password
+            })
+            if (res) {
+                if (res.EC === 0) {
+
+                    let data = {
+                        isAuthenticated: true,
+                        token: res.DT.access_token,
+                        account: {
+                            name: res.DT.name,
+                            address: res.DT.address,
+                            avatar: res.DT.avatar,
+                            email: res.DT.email,
+                            phoneNumber: res.DT.phoneNumber,
+                            districtId: res.DT.districtId,
+                            roles: res.DT.roles
+                        }
+                    }
+
+                    SyncStorage.set("jwt", res.DT.access_token)
+
+                    dispatch(loginRedux(data))
+
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Thông báo',
+                        text2: `Đăng nhập thành công`,
+                        position: 'bottom'
+                    })
+
+                    navigation.dispatch(StackActions.replace('MainScreen'))
+                }
+                if (res.EC === 3) {
+                    Toast.show({
+                        type: 'error',
+                        text1: 'Thông báo',
+                        text2: `Sai mật khẩu`,
+                        position: 'bottom'
+                    })
+                }
+                if (res.EC === 3) {
+                    Toast.show({
+                        type: 'error',
+                        text1: 'Thông báo',
+                        text2: `Sai mật khẩu`,
+                        position: 'bottom'
+                    })
+                }
+                if (res.EC === 1) {
+                    Toast.show({
+                        type: 'error',
+                        text1: 'Thông báo',
+                        text2: `Tài khoản không tồn tại`,
+                        position: 'bottom'
+                    })
+                }
+                if (res.EC === 2) {
+                    Toast.show({
+                        type: 'error',
+                        text1: 'Thông báo',
+                        text2: `Thiếu thông tin`,
+                        position: 'bottom'
+                    })
+                }
+                if (res.EC === -2) {
+                    Toast.show({
+                        type: 'error',
+                        text1: 'Thông báo',
+                        text2: `Lỗi từ server`,
+                        position: 'bottom'
+                    })
+                }
+            }
+
+        } catch (error) {
+            Toast.show({
+                type: 'error',
+                text1: 'Thông báo',
+                text2: `Lỗi phát sinh khi kết nối tới server`,
+                position: 'bottom'
+            })
+        }
+
+
     }
+    const [email, setEmail] = useState(route.params ? route.params : '')
+    const [password, setPassword] = useState('')
+
+    const handleOnChange = (text, type) => {
+        if (type === 'email') {
+            setEmail(text)
+        }
+        if (type === 'password') {
+            setPassword(text)
+        }
+    }
+
+
     return (
         <ScrollView style={{ flex: 1 }} behavior="padding" enabled>
             <View style={{ flex: 1, margin: 10 }}>
@@ -23,7 +152,7 @@ const Login = ({ navigation }) => {
                     <Text style={{ flex: 15, color: '#F46722', fontSize: 18, fontWeight: 'bold', marginBottom: 20 }}>Chúc bạn một ngày mới tốt lành!</Text>
                     <View style={{ flex: 40 }}>
                         <Text style={{ marginVertical: 2 }}>Email</Text>
-                        <TextInput placeholder="Vui lòng nhập email" style={{
+                        <TextInput onChangeText={(text) => handleOnChange(text, 'email')} value={email} placeholder="Vui lòng nhập email" style={{
                             color: 'blue',
                             height: 45,
                             width: 360,
@@ -32,7 +161,7 @@ const Login = ({ navigation }) => {
                             borderColor: 'black',
                             borderRadius: 16
                         }}></TextInput>
-                        <Text style={{ marginVertical: 2, color: 'red' }}>Vui lòng nhập email</Text>
+                        {!isValid ? <Text style={{ marginVertical: 2, color: 'red' }}>Email hoặc mật khẩu không hợp lệ</Text> : ''}
                     </View>
                     <View style={{ flex: 40, marginVertical: 2, }}>
                         <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
@@ -44,7 +173,7 @@ const Login = ({ navigation }) => {
 
                         </View>
 
-                        <TextInput placeholder="Nhập mật khẩu của bạn" style={{
+                        <TextInput onChangeText={(text) => handleOnChange(text, 'password')} value={password} placeholder="Nhập mật khẩu của bạn" style={{
                             color: 'blue',
                             height: 45,
                             width: 360,
@@ -53,10 +182,10 @@ const Login = ({ navigation }) => {
                             borderColor: 'black',
                             borderRadius: 16
                         }}></TextInput>
-                        <Text style={{ marginVertical: 2, color: 'red' }}>Vui lòng nhập password</Text>
+                        {!isValid ? <Text style={{ marginVertical: 2, color: 'red' }}>Email hoặc mật khẩu không hợp lệ</Text> : ''}
                     </View>
                     <View style={{ flex: 40, marginTop: 20 }}>
-                        <TouchableOpacity onPress={handleLogin} style={{
+                        <TouchableOpacity onPress={handleOnLogin} style={{
                             height: 45,
                             width: 360,
                             alignItems: "center",

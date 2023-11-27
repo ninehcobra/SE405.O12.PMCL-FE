@@ -3,6 +3,8 @@ import { Picker } from "@react-native-picker/picker";
 import { useEffect, useState } from "react";
 import Loading from "./Loading";
 import { getAllProvince, getDistrictById } from "../services/addressService";
+import { handleRegister } from "../services/userService";
+import Toast from 'react-native-toast-message';
 
 
 const Register = ({ route, navigation }) => {
@@ -30,10 +32,53 @@ const Register = ({ route, navigation }) => {
     const [error, setError] = useState(0)
 
 
-    const onRegister = () => {
-        console.log('email', email, 'phonenumber', phoneNumber, 'name', fullName, 'address', address, 'province', selectedProvince, 'district', selectedDistrict, 'password', password, 'repass', rePassword)
+    const onRegister = async () => {
+        // console.log('email', email, 'phonenumber', phoneNumber, 'name', fullName, 'address', address, 'province', selectedProvince, 'district', selectedDistrict, 'password', password, 'repass', rePassword)
         if (validationInput()) {
-            console.log('done')
+            let res = await handleRegister({
+                email: email,
+                password: password,
+                address: address,
+                phoneNumber: phoneNumber,
+                districtId: selectedDistrict,
+                name: fullName
+            })
+
+
+            if (res) {
+                if (res.EC === 0) {
+                    Toast.show({
+                        text1: 'Thông báo',
+                        text2: 'Tạo tài khoản thành công 👋',
+                        position: 'bottom',
+                    })
+                    navigation.navigate("Login", { email: email })
+                }
+                if (res.EC === 2) {
+                    Toast.show({
+                        type: 'error',
+                        text1: 'Thông báo',
+                        text2: 'Thông tin bị thiếu 👋',
+                        position: 'bottom'
+                    })
+                }
+                if (res.EC === 1) {
+                    Toast.show({
+                        type: 'error',
+                        text1: 'Thông báo',
+                        text2: 'Email này đã tồn tại trên hệ thống ❗',
+                        position: 'bottom'
+                    })
+                }
+                if (res.EC === -2) {
+                    Toast.show({
+                        type: 'error',
+                        text1: 'Thông báo',
+                        text2: 'Lỗi phát sinh từ server ❗',
+                        position: 'bottom'
+                    })
+                }
+            }
         }
     }
 

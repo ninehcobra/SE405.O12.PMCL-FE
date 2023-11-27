@@ -2,10 +2,12 @@ import { View, Text, TextInput, Image, TouchableOpacity } from "react-native"
 import { Appbar, IconButton } from 'react-native-paper';
 import { ScrollView } from "react-native";
 import { useState } from "react";
+import { useDispatch, useSelector } from 'react-redux'
 
 const Home = () => {
     const [isChoosen, setIsChoosen] = useState(0)
 
+    const info = useSelector((state) => state.personalInfo)
 
     return (
         <ScrollView style={{ flex: 1 }}>

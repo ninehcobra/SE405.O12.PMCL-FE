@@ -1,8 +1,10 @@
 import { View, Text, TouchableOpacity, TextInput, Image, ScrollView } from "react-native"
 import { StackActions } from "@react-navigation/native"
 import { IconButton } from "react-native-paper"
+import { useDispatch, useSelector } from 'react-redux'
 
 const User = ({ navigation }) => {
+    const info = useSelector((state) => state.personalInfo)
     return (
         <ScrollView style={{ flex: 1 }}>
             <View >
@@ -27,10 +29,10 @@ const User = ({ navigation }) => {
                     <Image source={require("../../assets/avatar.png")} style={{ height: 65, width: 65 }}></Image>
                 </View>
                 <View style={{ flex: 80, marginTop: 10 }}>
-                    <Text style={{ fontSize: 14, color: '#01466D', fontWeight: 'bold', marginBottom: 2 }}>Truong Nguyen Cong Chinh - 0797260870</Text>
-                    <Text style={{ fontSize: 14, color: '#F16728', fontWeight: 'bold', marginBottom: 2 }}>ID khách hàng - 3583804</Text>
-                    <Text style={{ fontSize: 14, color: '#F16728', fontWeight: 'bold', marginBottom: 2 }}>ID shop - 38665544</Text>
-                    <Text style={{ fontSize: 13, color: '#454545', fontWeight: 'bold', marginBottom: 2 }}>congchinh2903@gmail.com</Text>
+                    <Text style={{ fontSize: 14, color: '#01466D', fontWeight: 'bold', marginBottom: 2 }}>{info.name} - {info.phoneNumber}</Text>
+                    <Text style={{ fontSize: 14, color: '#F16728', fontWeight: 'bold', marginBottom: 2 }}>ID khách hàng - {info.id}</Text>
+                    <Text style={{ fontSize: 14, color: '#F16728', fontWeight: 'bold', marginBottom: 2 }}>ID shop - {info.idShop}</Text>
+                    <Text style={{ fontSize: 13, color: '#454545', fontWeight: 'bold', marginBottom: 2 }}>{info.email}</Text>
                     <Text style={{ fontSize: 13, color: '#454545', fontWeight: 'bold' }}>Phiên bản 1.0.0</Text>
                 </View>
             </View>

@@ -6,24 +6,28 @@ import Login from './screens/Login';
 import MainScreen from './screens/MainScreen';
 import Toast from 'react-native-toast-message';
 const Stack = createNativeStackNavigator();
+import { Provider } from 'react-redux';
+import { store } from "./redux/store"
 
 export default function App() {
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName='Login'
-        screenOptions={{
-          headerShown: false,
-        }}
-      >
-        <Stack.Screen name="Login" component={Login} options={{ gestureEnabled: false }} />
-        <Stack.Screen name="Register" component={Register} options={{ gestureEnabled: false }} />
-        <Stack.Screen name='MainScreen' component={MainScreen} options={{ gestureEnabled: false }} />
-      </Stack.Navigator>
-      <Toast />
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName='Login'
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
+          <Stack.Screen name="Login" component={Login} options={{ gestureEnabled: false }} />
+          <Stack.Screen name="Register" component={Register} options={{ gestureEnabled: false }} />
+          <Stack.Screen name='MainScreen' component={MainScreen} options={{ gestureEnabled: false }} />
 
+        </Stack.Navigator>
+        <Toast />
+      </NavigationContainer>
+    </Provider>
   );
 }
 
