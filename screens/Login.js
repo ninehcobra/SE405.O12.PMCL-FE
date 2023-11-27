@@ -1,8 +1,17 @@
 import { Text, View, Image, TextInput, Button, TouchableOpacity, ScrollView } from "react-native";
 import { StackActions } from '@react-navigation/native';
-
+import Toast from 'react-native-toast-message';
 
 const Login = ({ navigation }) => {
+    const handleLogin = () => {
+        // navigation.dispatch(StackActions.replace('MainScreen'))
+        Toast.show({
+            type: 'error',
+            text1: 'Hello',
+            text2: 'This is some something 👋',
+            position: 'bottom'
+        })
+    }
     return (
         <ScrollView style={{ flex: 1 }} behavior="padding" enabled>
             <View style={{ flex: 1, margin: 10 }}>
@@ -47,7 +56,7 @@ const Login = ({ navigation }) => {
                         <Text style={{ marginVertical: 2, color: 'red' }}>Vui lòng nhập password</Text>
                     </View>
                     <View style={{ flex: 40, marginTop: 20 }}>
-                        <TouchableOpacity onPress={() => navigation.dispatch(StackActions.replace('MainScreen'))} style={{
+                        <TouchableOpacity onPress={handleLogin} style={{
                             height: 45,
                             width: 360,
                             alignItems: "center",
@@ -59,10 +68,7 @@ const Login = ({ navigation }) => {
                         </TouchableOpacity>
                         <View style={{ textAlign: 'center', margin: 10, alignItems: 'center', justifyContent: 'center', flexDirection: 'row' }}>
                             <Text style={{ fontSize: 14, color: '#11374C', fontWeight: 'bold' }}>Bạn đã có tài khoản chưa?</Text>
-                            <TouchableOpacity onPress={() => navigation.navigate('Register', {
-                                id: 1,
-                                name: 'cac'
-                            })} style={{ marginLeft: 5 }} >
+                            <TouchableOpacity onPress={() => navigation.navigate('Register')} style={{ marginLeft: 5 }} >
                                 <Text style={{ color: '#F46722', textAlign: 'center', fontWeight: 'bold' }}>Đăng ký ngay</Text>
                             </TouchableOpacity>
 

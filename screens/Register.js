@@ -8,8 +8,6 @@ import { getAllProvince, getDistrictById } from "../services/addressService";
 const Register = ({ route, navigation }) => {
     const [isLoading, setIsLoading] = useState(true)
 
-
-    console.log(route.params)
     // state quản lý input
 
     const [email, setEmail] = useState('')
@@ -33,8 +31,9 @@ const Register = ({ route, navigation }) => {
 
 
     const onRegister = () => {
+        console.log('email', email, 'phonenumber', phoneNumber, 'name', fullName, 'address', address, 'province', selectedProvince, 'district', selectedDistrict, 'password', password, 'repass', rePassword)
         if (validationInput()) {
-
+            console.log('done')
         }
     }
 
@@ -66,8 +65,11 @@ const Register = ({ route, navigation }) => {
 
     const onChangeText = (text, type) => {
         if (type === 'email') { setEmail(text) }
-        else if (type === 'password') { setPassword(text) }
-        else { setRePassword(text) }
+        if (type === 'password') { setPassword(text) }
+        if (type === 'phoneNumber') { setPhoneNumber(text) }
+        if (type === 'fullName') { setFullName(text) }
+        if (type === 'address') { setAddress(text) }
+        if (type === 'rePassword') { setRePassword(text) }
     }
 
 
@@ -75,7 +77,6 @@ const Register = ({ route, navigation }) => {
         const fetchProvince = async () => {
             try {
                 const responseData = await getAllProvince();
-                console.log('Lấy dữ liệu province thành công')
                 setProvince(responseData.data.data);
             } catch (error) {
                 // Xử lý lỗi nếu cần thiết
@@ -86,7 +87,6 @@ const Register = ({ route, navigation }) => {
         const fetchDistrict = async (id) => {
             try {
                 const responseData = await getDistrictById(id);
-                console.log('Lấy dữ liệu district thành công')
                 setDistrict(responseData.data);
             } catch (error) {
                 // Xử lý lỗi nếu cần thiết
@@ -120,7 +120,9 @@ const Register = ({ route, navigation }) => {
                     <View style={{ flex: 40 }}>
                         <Text style={{ marginVertical: 2 }}>Email</Text>
                         <TextInput
+                            spellCheck={false}
                             value={email}
+
                             onChangeText={(text) => onChangeText(text, 'email')}
                             placeholder="Vui lòng nhập email" style={{
                                 color: 'black',
@@ -145,6 +147,7 @@ const Register = ({ route, navigation }) => {
                     <View style={{ flex: 40 }}>
                         <Text style={{ marginVertical: 2 }}>Số điện thoại</Text>
                         <TextInput
+                            spellCheck={false}
                             value={phoneNumber}
                             onChangeText={(text) => onChangeText(text, 'phoneNumber')}
                             placeholder="Vui lòng nhập số điện thoại của bạn" style={{
@@ -171,6 +174,7 @@ const Register = ({ route, navigation }) => {
                     <View style={{ flex: 40 }}>
                         <Text style={{ marginVertical: 2 }}>Họ và tên</Text>
                         <TextInput
+                            spellCheck={false}
                             value={fullName}
                             onChangeText={(text) => onChangeText(text, 'fullName')}
                             placeholder="Vui lòng nhập đầy đủ họ và tên" style={{
@@ -196,6 +200,7 @@ const Register = ({ route, navigation }) => {
                     <View style={{ flex: 40 }}>
                         <Text style={{ marginVertical: 2 }}>Địa chỉ</Text>
                         <TextInput
+                            spellCheck={false}
                             value={address}
                             onChangeText={(text) => onChangeText(text, 'address')}
                             placeholder="Vui lòng nhập địa chỉ chính xác của bạn" style={{
@@ -236,10 +241,10 @@ const Register = ({ route, navigation }) => {
                                 onValueChange={(itemValue, itemIndex) =>
                                     setSelectedProvince(itemValue)
                                 }>
-                                <Picker.Item label="Chọn tỉnh" value="" />
+                                <Picker.Item key={0} label="Chọn tỉnh" value="" />
                                 {province ? province.map((item) => {
                                     return (
-                                        <Picker.Item label={item.name} value={item.id} />
+                                        <Picker.Item key={item.id} label={item.name} value={item.id} />
                                     )
                                 }) : ''}
                             </Picker>
@@ -265,10 +270,10 @@ const Register = ({ route, navigation }) => {
                                 onValueChange={(itemValue, itemIndex) =>
                                     setSelectedDistrict(itemValue)
                                 }>
-                                <Picker.Item label="Chọn Quận/Huyện" value={''} />
+                                <Picker.Item key={0} label="Chọn Quận/Huyện" value={''} />
                                 {district ? district.map((item) => {
                                     return (
-                                        <Picker.Item label={item.name} value={item.id} />
+                                        <Picker.Item key={item.id} label={item.name} value={item.id} />
                                     )
                                 }) : ''}
                             </Picker>
@@ -289,7 +294,8 @@ const Register = ({ route, navigation }) => {
 
                         </View>
 
-                        <TextInput placeholder="Nhập mật khẩu của bạn"
+                        <TextInput
+                            spellCheck={false} placeholder="Nhập mật khẩu của bạn"
                             value={password}
                             onChangeText={(text) => onChangeText(text, 'password')}
                             style={{
@@ -317,7 +323,8 @@ const Register = ({ route, navigation }) => {
 
                         </View>
 
-                        <TextInput placeholder="Nhập lại mật khẩu của bạn"
+                        <TextInput
+                            spellCheck={false} placeholder="Nhập lại mật khẩu của bạn"
                             value={rePassword}
                             onChangeText={(text) => onChangeText(text, 'rePassword')}
                             style={{
