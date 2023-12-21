@@ -72,13 +72,13 @@ const User = ({ navigation }) => {
             </View>
 
             <View >
-                <TouchableOpacity style={{ height: 50, flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderColor: 'rgba(69, 69, 69, 0.2)' }}>
+                <TouchableOpacity onPress={() => { navigation.navigate('Shop') }} style={{ height: 50, flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderColor: 'rgba(69, 69, 69, 0.2)' }}>
                     <Image style={{ height: 35, width: 35, marginLeft: 10 }} source={require("../../assets/store.png")}></Image>
                     <Text style={{ color: '#01466D', fontSize: 14, fontWeight: 'bold', marginLeft: 20 }}>Quản lý cửa hàng</Text>
                     <View style={{ flex: 1 }}></View>
                     <Image style={{ height: 15, width: 15, marginRight: 10 }} source={require("../../assets/right-arrow.png")}></Image>
                 </TouchableOpacity>
-                <TouchableOpacity style={{ height: 50, flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderColor: 'rgba(69, 69, 69, 0.2)' }}>
+                <TouchableOpacity onPress={() => { navigation.navigate('Hierarchy') }} style={{ height: 50, flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderColor: 'rgba(69, 69, 69, 0.2)' }}>
                     <Image style={{ height: 35, width: 35, marginLeft: 10 }} source={require("../../assets/profile.png")}></Image>
                     <Text style={{ color: '#01466D', fontSize: 14, fontWeight: 'bold', marginLeft: 20 }}>Phân quyền</Text>
                     <View style={{ flex: 1 }}></View>
@@ -90,7 +90,7 @@ const User = ({ navigation }) => {
                     <View style={{ flex: 1 }}></View>
                     <Image style={{ height: 15, width: 15, marginRight: 10 }} source={require("../../assets/right-arrow.png")}></Image>
                 </TouchableOpacity>
-                <TouchableOpacity style={{ height: 50, flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderColor: 'rgba(69, 69, 69, 0.2)' }}>
+                <TouchableOpacity onPress={() => { navigation.navigate('UserDetail') }} style={{ height: 50, flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderColor: 'rgba(69, 69, 69, 0.2)' }}>
                     <Image style={{ height: 35, width: 35, marginLeft: 10 }} source={require("../../assets/edit.png")}></Image>
                     <Text style={{ color: '#01466D', fontSize: 14, fontWeight: 'bold', marginLeft: 20 }}>Thông tin cá nhân</Text>
                     <View style={{ flex: 1 }}></View>

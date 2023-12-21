@@ -70,7 +70,7 @@ const Login = ({ route, navigation }) => {
                         type: 'success',
                         text1: 'Thông báo',
                         text2: `Đăng nhập thành công`,
-                        position: 'bottom'
+                        position: 'top'
                     })
 
                     navigation.dispatch(StackActions.replace('MainScreen'))
@@ -80,7 +80,7 @@ const Login = ({ route, navigation }) => {
                         type: 'error',
                         text1: 'Thông báo',
                         text2: `Sai mật khẩu`,
-                        position: 'bottom'
+                        position: 'top'
                     })
                 }
                 if (res.EC === 3) {
@@ -88,7 +88,7 @@ const Login = ({ route, navigation }) => {
                         type: 'error',
                         text1: 'Thông báo',
                         text2: `Sai mật khẩu`,
-                        position: 'bottom'
+                        position: 'top'
                     })
                 }
                 if (res.EC === 1) {
@@ -96,7 +96,7 @@ const Login = ({ route, navigation }) => {
                         type: 'error',
                         text1: 'Thông báo',
                         text2: `Tài khoản không tồn tại`,
-                        position: 'bottom'
+                        position: 'top'
                     })
                 }
                 if (res.EC === 2) {
@@ -104,7 +104,7 @@ const Login = ({ route, navigation }) => {
                         type: 'error',
                         text1: 'Thông báo',
                         text2: `Thiếu thông tin`,
-                        position: 'bottom'
+                        position: 'top'
                     })
                 }
                 if (res.EC === -2) {
@@ -112,7 +112,7 @@ const Login = ({ route, navigation }) => {
                         type: 'error',
                         text1: 'Thông báo',
                         text2: `Lỗi từ server`,
-                        position: 'bottom'
+                        position: 'top'
                     })
                 }
             }

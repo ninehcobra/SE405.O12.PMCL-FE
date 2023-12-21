@@ -59,7 +59,7 @@ const Register = ({ route, navigation }) => {
                         type: 'error',
                         text1: 'Thông báo',
                         text2: 'Thông tin bị thiếu 👋',
-                        position: 'bottom'
+                        position: 'top'
                     })
                 }
                 if (res.EC === 1) {
@@ -67,7 +67,7 @@ const Register = ({ route, navigation }) => {
                         type: 'error',
                         text1: 'Thông báo',
                         text2: 'Email này đã tồn tại trên hệ thống ❗',
-                        position: 'bottom'
+                        position: 'top'
                     })
                 }
                 if (res.EC === -2) {
@@ -75,7 +75,7 @@ const Register = ({ route, navigation }) => {
                         type: 'error',
                         text1: 'Thông báo',
                         text2: 'Lỗi phát sinh từ server ❗',
-                        position: 'bottom'
+                        position: 'top'
                     })
                 }
             }
