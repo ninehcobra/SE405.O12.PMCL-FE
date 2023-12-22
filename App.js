@@ -31,6 +31,7 @@ export default function App() {
           <Stack.Screen name='Hierarchy' component={Hierarchy} options={{ gestureEnabled: false }} />
           <Stack.Screen name='UserDetail' component={UserDetail} options={{ gestureEnabled: false }} />
           <Stack.Screen name='CreateOrder' component={CreateOrder} options={{ gestureEnabled: false }} />
+
         </Stack.Navigator>
         <Toast />
       </NavigationContainer>

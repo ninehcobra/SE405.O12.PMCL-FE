@@ -23,7 +23,7 @@ const MainScreen = ({ navigation }) => {
 
     const renderScene = BottomNavigation.SceneMap({
         Home: Home,
-        Order: Order,
+        Order: () => <Order navigation={navigation} />,
         Chat: Chat,
         Reconciliation: Reconciliation,
         Complain: Complain,

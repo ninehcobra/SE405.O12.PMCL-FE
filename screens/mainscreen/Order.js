@@ -9,7 +9,7 @@ import NotGet from "../../components/order_screen_components/NotGet"
 import Sample from "../../components/order_screen_components/Sample"
 
 
-const Order = () => {
+const Order = ({ navigation }) => {
 
     const [isChoosen, setIsChoosen] = useState(0)
 
@@ -73,7 +73,7 @@ const Order = () => {
             </View>
             {isChoosen === 0 ? <AlreadyGet /> : isChoosen === 1 ? <NotGet /> : <Sample />}
 
-            <IconButton color="#FFFF" onPress={() => { console.log('them') }} icon={"plus"} size={36} style={{ position: "absolute", bottom: 5, right: 10, backgroundColor: '#F26754' }}>
+            <IconButton color="#FFFF" onPress={() => { navigation.navigate('CreateOrder') }} icon={"plus"} size={36} style={{ position: "absolute", bottom: 5, right: 10, backgroundColor: '#F26754' }}>
 
             </IconButton>
         </View >
