@@ -1,14 +1,33 @@
 import { View, Text, Image, TouchableOpacity, TextInput, Dimensions, ScrollView } from "react-native"
 import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
+import * as ImagePicker from 'expo-image-picker';
 
 const CreateOrder = ({ navigation }) => {
 
     const [isCollapseAddressInfo, setIsCollapseAddressInfo] = useState(false)
     const [isCollapseOrderInfo, setIsCollapseOrderInfo] = useState(false)
+    const [image, setImage] = useState(null);
 
     const { height, width } = Dimensions.get('window')
     // position: 'absolute', top: 0, left: 0, zIndex: 1
+
+    const chooseImage = async () => {
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: undefined,
+            quality: 1,
+        });
+
+        if (!result.cancelled) {
+            setImage({ uri: result.assets[0].uri });
+        }
+    };
+
+    const numbers = Array.from({ length: 100 }, (_, index) => (index + 1).toString());
+
+
     return (
 
         <View style={{ backgroundColor: '#DCDCDC', minHeight: height }}>
@@ -29,7 +48,7 @@ const CreateOrder = ({ navigation }) => {
 
                 </View>
             </View>
-            <ScrollView>
+            <ScrollView style={{ marginBottom: 110 }}>
                 <View style={{ margin: 8, borderWidth: 1, borderColor: '#80808033', backgroundColor: 'white', borderRadius: 16, marginTop: 63 }}>
                     <View style={{ padding: 8 }}>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }} >
@@ -170,7 +189,16 @@ const CreateOrder = ({ navigation }) => {
                     <View style={{ padding: 8 }}>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }} >
                             <View>
-                                <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#DF6032' }}>| THÔNG HÀNG HÓA</Text>
+                                <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#DF6032' }}>THÔNG TIN HÀNG HÓA</Text>
+                            </View>
+                        </View>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 12 }} >
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#DF6032' }}>| SẢN PHẨM</Text>
+                                <View style={{ marginLeft: 12, paddingHorizontal: 8, paddingVertical: 6, backgroundColor: '#80808033', borderRadius: 8, flexDirection: 'row', alignItems: 'center' }}>
+                                    <Image style={{ height: 20, width: 20 }} source={require("../../assets/plus.png")} />
+                                    <Text style={{ marginLeft: 4, color: '#1F4656', fontWeight: 'bold' }}>SP có sẵn</Text>
+                                </View>
                             </View>
                             <TouchableOpacity onPress={() => setIsCollapseOrderInfo(!isCollapseOrderInfo)} style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 <Text style={{ color: '#1F4656', fontSize: 14 }}>{isCollapseOrderInfo ? 'Mở rộng' : 'Thu gọn'}</Text>
@@ -180,47 +208,53 @@ const CreateOrder = ({ navigation }) => {
                                 }
                             </TouchableOpacity>
                         </View>
-
                         {
                             isCollapseOrderInfo
                                 ?
                                 ""
                                 :
-                                <View style={{ paddingLeft: 8, marginTop: 12 }}>
-                                    <View style={{ flexDirection: 'row', height: 28 }}>
-                                        <Text style={{ marginRight: 12, paddingBottom: 8, fontSize: 14, fontWeight: 'bold', color: '#5D5D5D' }}>Số điện thoại</Text>
-                                        <View style={{ paddingBottom: 8, borderBottomWidth: 1, borderColor: '#80808033', flex: 1 }}>
-                                            <TextInput placeholder="Nhập sđt bên nhận" style={{ flex: 1, fontSize: 14 }} />
+                                <View>
+                                    <View style={{ flex: 1, paddingHorizontal: 4, paddingVertical: 8, borderWidth: 1, borderRadius: 5, borderColor: '#80808033', marginBottom: 8 }}>
+                                        <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+                                            <Text style={{ marginRight: 4, flex: 4 }}>1.</Text>
+                                            <TextInput style={{ flex: 66, paddingBottom: 10, borderBottomWidth: 1, marginRight: 12, borderColor: '#808080' }} placeholder="Tên sản phẩm"></TextInput>
+                                            <TextInput style={{ flex: 30, paddingBottom: 10, borderBottomWidth: 1, borderColor: '#808080' }} placeholder="Mã SP"></TextInput>
                                         </View>
-                                    </View>
-
-                                    <View style={{ flexDirection: 'row', marginTop: 18, height: 28 }}>
-                                        <Text style={{ marginRight: 12, paddingBottom: 8, fontSize: 14, fontWeight: 'bold', color: '#5D5D5D' }}>Họ tên</Text>
-                                        <View style={{ paddingBottom: 8, borderBottomWidth: 1, borderColor: '#80808033', flex: 1 }}>
-                                            <TextInput placeholder="Nhập họ tên bên nhận" style={{ flex: 1, fontSize: 14 }} />
+                                        <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', marginTop: 12 }}>
+                                            <Text style={{ marginRight: 4, flex: 20 }}>KL (gam)</Text>
+                                            <TextInput style={{ flex: 50, paddingBottom: 10, borderBottomWidth: 1, marginRight: 12, borderColor: '#808080' }} placeholder="KL sản phẩm"></TextInput>
+                                            <View style={{ flex: 30, borderBottomWidth: 1, borderColor: '#808080' }} placeholder="Mã SP">
+                                                <Picker>
+                                                    {numbers.map((number) => (
+                                                        <Picker.Item key={number} label={number} value={number} />
+                                                    ))}
+                                                </Picker>
+                                            </View>
                                         </View>
+                                        <TouchableOpacity style={{ height: 40, backgroundColor: '#80808033', marginTop: 12, alignItems: 'center', justifyContent: 'center', borderRadius: 8 }}>
+                                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                                <Image style={{ height: 22, width: 22, marginLeft: 8, marginTop: 4 }} source={require("../../assets/plus.png")} />
+                                                <Text style={{ fontSize: 16, marginLeft: 8 }}>Thêm sản phẩm</Text>
+                                            </View>
+                                        </TouchableOpacity>
                                     </View>
+                                    <View>
+                                        <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#DF6032', marginBottom: 12 }}>| THÔNG TIN GÓI HÀNG</Text>
+                                        <View style={{ flex: 1, paddingHorizontal: 4, paddingVertical: 12, borderWidth: 1, borderRadius: 5, borderColor: '#80808033', flexDirection: 'row' }}>
+                                            <TouchableOpacity onPress={chooseImage} style={{ flex: 10, height: 40, width: 40, alignItems: 'center', justifyContent: 'center', backgroundColor: '#80808033', borderRadius: 20 }}>
+                                                {image ?
+                                                    <Image source={image} style={{ height: '100%', width: '100%' }} />
+                                                    :
+                                                    <Text style={{ fontSize: 12, color: '#1F4656' }}>Up ảnh</Text>}
+                                            </TouchableOpacity>
+                                            <View style={{ flex: 5 }}></View>
+                                            <View style={{ flex: 85, flexDirection: 'row' }}>
+                                                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+                                                    <Text style={{ marginRight: 4, flex: 34 }}>Tổng KL (gam)</Text>
+                                                    <TextInput style={{ flex: 66, paddingBottom: 10, borderBottomWidth: 1, marginRight: 12, borderColor: '#808080' }} placeholder="Khối lượng sản phẩm" editable={false}></TextInput>
 
-                                    <View style={{ flexDirection: 'row', marginTop: 18, height: 28 }}>
-                                        <Text style={{ marginRight: 12, paddingBottom: 8, fontSize: 14, fontWeight: 'bold', color: '#5D5D5D' }}>Địa chỉ</Text>
-                                        <View style={{ paddingBottom: 8, borderBottomWidth: 1, borderColor: '#80808033', flex: 1 }}>
-                                            <TextInput placeholder="Nhập địa chỉ" style={{ flex: 1, fontSize: 14 }} />
-                                        </View>
-                                    </View>
-
-                                    <View style={{ flexDirection: 'row', marginTop: 18, height: 28 }}>
-                                        <View style={{ paddingBottom: 8, borderBottomWidth: 1, borderColor: '#80808033', flex: 1, justifyContent: 'center' }}>
-                                            <Picker>
-                                                <Picker.Item style={{ color: '#808080' }} key={0} label="Chọn tỉnh / thành phố" value={0} />
-                                            </Picker>
-                                        </View>
-                                    </View>
-
-                                    <View style={{ flexDirection: 'row', marginTop: 18, height: 28 }}>
-                                        <View style={{ paddingBottom: 8, borderBottomWidth: 1, borderColor: '#80808033', flex: 1, justifyContent: 'center' }}>
-                                            <Picker>
-                                                <Picker.Item style={{ color: '#808080' }} key={0} label="Chọn quận huyện" value={0} />
-                                            </Picker>
+                                                </View>
+                                            </View>
                                         </View>
                                     </View>
                                 </View>
@@ -289,6 +323,26 @@ const CreateOrder = ({ navigation }) => {
 
                 </View>
             </ScrollView>
+            <View style={{ position: 'absolute', bottom: 0, left: 0, zIndex: 1, width: width }}>
+                <View style={{ height: 55, alignItems: 'center', flexDirection: 'row', backgroundColor: 'white' }}>
+                    <View style={{ flex: 1, height: 35, justifyContent: 'center' }}>
+                        <View style={{ margin: 10 }}>
+                            <Picker>
+                                <Picker.Item style={{ color: '#1F4656', fontWeight: 'bold' }} key={0} label="Bên nhận trả phí" value={0} />
+                            </Picker>
+                        </View>
+                    </View>
+                </View>
+                <View style={{ height: 55, alignItems: 'center', flexDirection: 'row', backgroundColor: '#CCCCCC', flex: 1, }}>
+                    <View style={{ flex: 50, alignItems: 'center', justifyContent: 'center', backgroundColor: '#1F4656', height: 55 }}>
+                        <Text style={{ fontSize: 18, color: 'white', fontWeight: 500 }}>Lưu nháp</Text>
+                    </View>
+                    <View style={{ flex: 50, alignItems: 'center', justifyContent: 'center', height: 55 }}>
+                        <Text style={{ fontSize: 18, color: 'white', fontWeight: 500 }}>Tạo đơn hàng</Text>
+                    </View>
+
+                </View>
+            </View>
         </View >
 
     )
