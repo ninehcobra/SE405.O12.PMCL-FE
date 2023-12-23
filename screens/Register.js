@@ -122,7 +122,7 @@ const Register = ({ route, navigation }) => {
         const fetchProvince = async () => {
             try {
                 const responseData = await getAllProvince();
-                setProvince(responseData.data.data);
+                setProvince(responseData.DT);
             } catch (error) {
                 // Xử lý lỗi nếu cần thiết
                 console.log('Lỗi khi lấy dữ liệutừ API:', error);
@@ -132,7 +132,7 @@ const Register = ({ route, navigation }) => {
         const fetchDistrict = async (id) => {
             try {
                 const responseData = await getDistrictById(id);
-                setDistrict(responseData.data);
+                setDistrict(responseData.data.data);
             } catch (error) {
                 // Xử lý lỗi nếu cần thiết
                 console.log('Lỗi khi lấy dữ liệutừ API:', error);
