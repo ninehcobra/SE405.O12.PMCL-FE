@@ -2,8 +2,11 @@ import { View, Text, TouchableOpacity, Image, ScrollView, Dimensions, TextInput 
 import { Picker } from "@react-native-picker/picker"
 import { useState, useEffect } from "react"
 import { getAllProvince, getDistrictById } from "../../services/addressService"
+import { createShop, updateShop, getShopById } from "../../services/shopService"
+import Toast from 'react-native-toast-message';
 
-const Shop = ({ navigation }) => {
+
+const Shop = ({ navigation, route }) => {
 
     const [shopData, setShopData] = useState({
         phoneNumber: '',
@@ -16,6 +19,7 @@ const Shop = ({ navigation }) => {
     const [arrProvince, setArrProvince] = useState(null)
     const [arrDistrict, setArrDistrict] = useState(null)
     const [isValid, setIsValid] = useState(false)
+    const [isFetchDetailShop, setIsFetchDetailShop] = useState(true)
 
 
     const { height, width } = Dimensions.get('window')
@@ -24,6 +28,9 @@ const Shop = ({ navigation }) => {
         let res = await getAllProvince()
         if (res.EC === 0) {
             setArrProvince(res.DT)
+        }
+        else {
+            setArrProvince([])
         }
         setIsFetchDistrict(true)
     }
@@ -40,13 +47,41 @@ const Shop = ({ navigation }) => {
         let res = await getDistrictById(id)
         if (res.EC === 0) {
             setArrDistrict(res.DT)
+
         }
+        else {
+            setArrDistrict([])
+        }
+    }
+
+    const fetchShopDetail = async (id) => {
+        let res = await getShopById(id)
+        if (res.EC === 0) {
+            let data = { ...shopData }
+            data.address = res.DT.address
+            data.provinceId = res.DT.provinceId
+
+            data.name = res.DT.name
+            data.phoneNumber = res.DT.phoneNumber
+
+            await setShopData(data)
+            data.districtId = res.DT.districtId
+            await setShopData(data)
+            setIsFetchDetailShop(false)
+        }
+
     }
 
     useEffect(() => {
         if (!isFetchDistrict) {
             fetchProvince()
         }
+        if (isFetchDetailShop) {
+            if (route.params?.edit) {
+                fetchShopDetail(route.params?.id)
+            }
+        }
+
 
         fetchDistrictById(shopData.provinceId)
     }, [shopData.provinceId])
@@ -66,6 +101,54 @@ const Shop = ({ navigation }) => {
         return true;
     }
 
+    const handleCreateShop = async () => {
+        if (route.params?.id) {
+            let data = { ...shopData }
+
+            data.id = route.params?.id
+
+            let res = await updateShop(data)
+            if (res && res.EC === 0) {
+                Toast.show({
+                    type: 'success',
+                    text1: 'Thông báo',
+                    text2: `Cập nhật cửa hàng thành công`,
+                    position: 'top'
+                })
+                navigation.goBack()
+            }
+            else {
+                Toast.show({
+                    type: 'success',
+                    text1: 'Thông báo',
+                    text2: `Lỗi hệ thông`,
+                    position: 'top'
+                })
+            }
+        }
+        else {
+            let res = await createShop(shopData)
+            if (res && res.EC === 0) {
+                Toast.show({
+                    type: 'success',
+                    text1: 'Thông báo',
+                    text2: `Tạo cửa hàng thành công`,
+                    position: 'top'
+                })
+                navigation.goBack()
+            }
+            else {
+                Toast.show({
+                    type: 'success',
+                    text1: 'Thông báo',
+                    text2: `Lỗi hệ thông`,
+                    position: 'top'
+                })
+            }
+        }
+    }
+
+
     return (
         <View style={{ backgroundColor: '#F7F7F7', minHeight: height }}>
             <View style={{ position: 'absolute', top: 0, left: 0, zIndex: 1, height: 55, width: width }}>
@@ -77,7 +160,7 @@ const Shop = ({ navigation }) => {
                     </View>
 
                     <View style={{ flex: 60, alignItems: 'center', justifyContent: 'center' }}>
-                        <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#1F4656' }}>Thêm cửa hàng</Text>
+                        <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#1F4656' }}> {route.params?.edit ? 'Chỉnh sửa cửa hàng' : 'Thêm cửa hàng'}</Text>
                     </View>
                     <View style={{ flex: 20 }}></View>
 
@@ -98,7 +181,7 @@ const Shop = ({ navigation }) => {
                     </View>
 
                     <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
-                        <Text style={{ marginRight: 8 }}>Họ tên</Text>
+                        <Text style={{ marginRight: 8 }}>Tên cửa hàng</Text>
                         <TextInput value={shopData.name} onChangeText={(text) => handleOnChange(text, 'name')} style={{ flex: 1, paddingBottom: 4, borderBottomWidth: 1, marginRight: 12, borderColor: '#80808033' }} placeholder="Tên cửa hàng">
                         </TextInput>
                     </View>
@@ -186,10 +269,10 @@ const Shop = ({ navigation }) => {
             </ScrollView >
             <View style={{ position: 'absolute', bottom: 0, left: 0, zIndex: 1, width: width }}>
 
-                <TouchableOpacity disabled={!isValid} style={isValid ? { height: 55, alignItems: 'center', flexDirection: 'row', backgroundColor: '#DF6032', flex: 1, } : { height: 55, alignItems: 'center', flexDirection: 'row', backgroundColor: '#CCCCCC', flex: 1, }}>
+                <TouchableOpacity onPress={handleCreateShop} disabled={!isValid} style={isValid ? { height: 55, alignItems: 'center', flexDirection: 'row', backgroundColor: '#DF6032', flex: 1, } : { height: 55, alignItems: 'center', flexDirection: 'row', backgroundColor: '#CCCCCC', flex: 1, }}>
 
                     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: 55 }}>
-                        <Text style={{ fontSize: 18, color: 'white', fontWeight: 500 }}>Tạo cửa hàng</Text>
+                        <Text style={{ fontSize: 18, color: 'white', fontWeight: 500 }}>{route.params?.edit ? 'Lưu thay đổi' : 'Tạo cửa hàng'}</Text>
                     </View>
 
                 </TouchableOpacity>
