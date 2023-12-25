@@ -3,6 +3,7 @@ import { Picker } from "@react-native-picker/picker";
 import { useEffect, useState } from "react";
 import * as ImagePicker from 'expo-image-picker';
 import { getAllProvince, getDistrictById } from "../../services/addressService";
+import { getShopById } from "../../services/shopService";
 
 const CreateOrder = ({ navigation, route }) => {
 
@@ -12,15 +13,19 @@ const CreateOrder = ({ navigation, route }) => {
         recAddress: '',
         recProvinceId: 0,
         recDistrictId: 0,
-        senAddress: '',
         takeTime: '',
     })
+
+    const [shop, setShop] = useState(null)
     const [arrProvince, setArrProvince] = useState(null)
     const [arrDistrict, setArrDistrict] = useState(null)
     const [isCollapseAddressInfo, setIsCollapseAddressInfo] = useState(false)
     const [isCollapseOrderInfo, setIsCollapseOrderInfo] = useState(false)
     const [image, setImage] = useState(null);
     const [isFetchDistrict, setIsFetchDistrict] = useState(false)
+    const [products, setProducts] = useState([{ name: '', code: '', weight: '', quantity: '' }]);
+
+    const [isDataAddressValid, setIsDataAddressValid] = useState(false)
 
     const { height, width } = Dimensions.get('window')
     // position: 'absolute', top: 0, left: 0, zIndex: 1
@@ -38,12 +43,23 @@ const CreateOrder = ({ navigation, route }) => {
         }
     };
 
+    const validateAddressInfo = (data) => {
+        // Kiểm tra null cho mỗi trườn
+        const isAnyFieldNull = Object.values(data).some((value) => value === null || value === '');
+
+        // Kiểm tra giá trị 0 cho recProvinceId và recDistrictId
+        const isProvinceDistrictZero = data.recProvinceId === 0 || data.recDistrictId === 0;
+
+        return !isAnyFieldNull && !isProvinceDistrictZero;
+    };
+
     const numbers = Array.from({ length: 100 }, (_, index) => (index + 1).toString());
     const handleOnChangeAddressInfo = (text, type) => {
         let data = { ...dataAddressInfo }
         data[type] = text
         console.log(data)
         setDataAddressInfo(data)
+        setIsDataAddressValid(validateAddressInfo(data))
     }
 
     const fetchProvince = async () => {
@@ -62,15 +78,121 @@ const CreateOrder = ({ navigation, route }) => {
         }
     }
 
+    const fetchShopDetail = async (id) => {
+        let res = await getShopById(id)
+        if (res.EC === 0) {
+            setShop(res.DT)
+        }
+    }
+
+    const fetchMyShop = async () => {
+        if (route.params?.shopId) {
+            await fetchShopDetail(route.params?.shopId)
+        }
+    }
+
     useEffect(() => {
+        const unsubcribe = navigation.addListener('focus', () => {
+            fetchMyShop()
+        })
+
+
         if (!isFetchDistrict) {
             fetchProvince()
         }
 
-        fetchDistrictById(dataAddressInfo.recProvinceId)
-    }, [dataAddressInfo.recProvinceId])
 
-    console.log(route.params?.shop)
+
+        fetchDistrictById(dataAddressInfo.recProvinceId)
+        return unsubcribe
+    }, [dataAddressInfo.recProvinceId, navigation])
+
+    let time = new Date();
+    let hours = time.getHours()
+    let month = time.getMonth() + 1;
+    let timeString = time.getDate() + "-" + month + "-" + time.getFullYear();
+    let timeNextDayString = time.getDate() + 1 + "-" + month + "-" + time.getFullYear();
+
+    function createDateWithTime(dateString, timeOption) {
+        // Chuyển đổi ngày từ chuỗi sang đối tượng Date
+        const [day, month, year] = dateString.split('-');
+        const date = new Date(`${month}-${day}-${year}`);
+
+        // Thiết lập giờ và phút dựa trên timeOption
+        if (timeOption === 1) {
+            // 7:00 AM
+            date.setHours(7, 0, 0, 0);
+        } else if (timeOption === 2) {
+            // 12:00 PM
+            date.setHours(12, 0, 0, 0);
+        }
+
+        return date;
+    }
+
+    const addProduct = () => {
+        setProducts([...products, { name: '', code: '', weight: '', quantity: '' }]);
+    };
+
+    const updateProduct = (index, field, value) => {
+        const updatedProducts = [...products];
+        updatedProducts[index][field] = value;
+        setProducts(updatedProducts);
+    };
+
+    const removeProduct = (index) => {
+        const updatedProducts = [...products];
+        updatedProducts.splice(index, 1);
+        setProducts(updatedProducts);
+    };
+
+
+    const renderProductInputs = () => {
+        return products.map((product, index) => (
+            <View key={index} style={{ padding: 10, borderWidth: 1, borderRadius: 5, margin: 4, borderColor: '#80808033' }}>
+                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+                    <Text style={{ marginRight: 4, flex: 4 }}>{index + 1}.</Text>
+                    <TextInput
+                        style={{ flex: 66, paddingBottom: 10, borderBottomWidth: 1, marginRight: 12, borderColor: '#808080' }}
+                        placeholder="Tên sản phẩm"
+                        value={product.name}
+                        onChangeText={(text) => updateProduct(index, 'name', text)}
+                    />
+                    <TextInput
+                        style={{ flex: 30, paddingBottom: 10, borderBottomWidth: 1, borderColor: '#808080' }}
+                        placeholder="Mã SP"
+                        value={product.code}
+                        onChangeText={(text) => updateProduct(index, 'code', text)}
+                    />
+                </View>
+                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+                    <Text style={{ marginRight: 4 }}>KL(gam)</Text>
+                    <TextInput
+                        style={{ flex: 50, paddingBottom: 10, borderBottomWidth: 1, marginRight: 12, borderColor: '#808080' }}
+                        placeholder="KL sản phẩm"
+                        value={product.weight}
+                        onChangeText={(text) => updateProduct(index, 'weight', text)}
+                    />
+                    <Text style={{ marginRight: 4 }}>SL</Text>
+                    <View style={{ flex: 30, borderBottomWidth: 1, borderColor: '#808080' }}>
+                        <Picker
+                            selectedValue={product.quantity}
+                            onValueChange={(value) => updateProduct(index, 'quantity', value)}>
+                            {numbers.map((number) => (
+                                <Picker.Item key={number} label={number.toString()} value={number.toString()} />
+                            ))}
+                        </Picker>
+                    </View>
+                </View>
+
+                <View style={{ padding: 4, backgroundColor: '#80808033', width: 60, alignItems: "center", justifyContent: 'center', borderRadius: 20 }}>
+                    <TouchableOpacity onPress={() => removeProduct(index)}>
+                        <Text style={{ color: 'black' }}>Xóa</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        ));
+    };
 
     return (
 
@@ -99,7 +221,7 @@ const CreateOrder = ({ navigation, route }) => {
                             <View>
                                 <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#DF6032' }}>| {isCollapseAddressInfo ? 'ĐỊA CHỈ' : "THÔNG TIN BÊN NHẬN"}</Text>
                             </View>
-                            <TouchableOpacity onPress={() => setIsCollapseAddressInfo(!isCollapseAddressInfo)} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <TouchableOpacity disabled={!isDataAddressValid} onPress={() => setIsCollapseAddressInfo(!isCollapseAddressInfo)} style={isDataAddressValid ? { flexDirection: 'row', alignItems: 'center' } : { flexDirection: 'row', alignItems: 'center', opacity: 0.5 }}>
                                 <Text style={{ color: '#1F4656', fontSize: 14, fontWeight: 500 }}>{isCollapseAddressInfo ? 'Mở rộng' : 'Thu gọn'}</Text>
                                 {isCollapseAddressInfo ?
                                     <Image style={{ height: 16, width: 16, marginLeft: 8, marginTop: 4 }} source={require("../../assets/up-arrow.png")} /> :
@@ -115,19 +237,21 @@ const CreateOrder = ({ navigation, route }) => {
                                     <View style={{ paddingLeft: 8, marginTop: 12 }}>
                                         <View style={{ flexDirection: 'row' }}>
                                             <Text style={{ marginRight: 12, paddingBottom: 8, fontSize: 14, fontWeight: 'bold', color: '#5D5D5D' }}>Bên nhận:</Text>
-                                            <Text style={{ flex: 1, color: '#1F4656', fontWeight: 600 }}>0797260870 - Trương Nguyễn Công Chính ádasd</Text>
+                                            <Text style={{ flex: 1, color: '#1F4656', fontWeight: 600 }}>{dataAddressInfo.recPhoneNumber} - {dataAddressInfo.recName}</Text>
                                         </View>
                                     </View>
                                     <View style={{ paddingLeft: 8, marginTop: 12 }}>
                                         <View style={{ flexDirection: 'row' }}>
-                                            <Text style={{ marginRight: 12, paddingBottom: 8, fontSize: 14, fontWeight: 'bold', color: '#5D5D5D' }}>Gửi tại bưu cục:</Text>
-                                            <Text style={{ flex: 1, color: '#1F4656', fontWeight: 600 }}>0797260870 - Trương Nguyễn Công Chính ádasd</Text>
+                                            <Text style={{ marginRight: 12, paddingBottom: 8, fontSize: 14, fontWeight: 'bold', color: '#5D5D5D' }}>Bên gửi:</Text>
+                                            <Text style={{ flex: 1, color: '#1F4656', fontWeight: 600 }}>{shop.phoneNumber} - {shop.name}</Text>
                                         </View>
                                     </View>
                                     <View style={{ paddingLeft: 8, marginTop: 12 }}>
                                         <View style={{ flexDirection: 'row' }}>
                                             <Text style={{ marginRight: 12, paddingBottom: 8, fontSize: 14, fontWeight: 'bold', color: '#5D5D5D' }}>Ca lấy hàng</Text>
-                                            <Text style={{ flex: 1, color: '#1F4656', fontWeight: 600 }}>Ca lấy 23-12-2023(12h00-18h00)</Text>
+                                            <Text style={{ flex: 1, color: '#1F4656', fontWeight: 600 }}>{dataAddressInfo.takeTime !== 3 ? `Ca lấy ${timeString} ${dataAddressInfo.takeTime === 2 ? '(12h00-18h00)' : '(7h00-12h00)'}` :
+                                                `Ca lấy ${timeNextDayString} (7h00-12h00)`
+                                            }</Text>
                                         </View>
                                     </View>
                                 </View>
@@ -246,14 +370,13 @@ const CreateOrder = ({ navigation, route }) => {
 
                                     <View style={{ paddingLeft: 8, marginTop: 4 }}>
                                         <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
-                                            <View style={{ flexDirection: 'column' }}>
-                                                <Text style={{ fontSize: 16, fontWeight: '600', color: '#093947', height: 18 }}>0797260870 - 0797260870</Text>
-                                                <Text style={{ fontSize: 16, fontWeight: '600', color: '#093947', height: 18 }}>Hẻm 224, ấp 3 xã An Phước</Text>
-                                                <Text style={{ fontSize: 16, fontWeight: '600', color: '#093947', height: 18 }}>Long Thành Đồng Nai</Text>
-                                                <Text style={{ fontSize: 16, fontWeight: '600', color: '#093947', height: 18 }}>0797260870 - 0797260870</Text>
-                                            </View>
+                                            {shop ? <View style={{ flexDirection: 'column' }}>
+                                                <Text style={{ fontSize: 16, fontWeight: '600', color: '#093947' }}>{`${shop.id} - ${shop.name}`}</Text>
+                                                <Text style={{ fontSize: 16, fontWeight: '600', color: '#093947' }}>{shop.address}</Text>
+                                                <Text style={{ fontSize: 16, fontWeight: '600', color: '#093947' }}>{shop.phoneNumber}</Text>
+                                            </View> : ''}
                                             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                                <TouchableOpacity>
+                                                <TouchableOpacity onPress={() => { navigation.navigate('CreateShop', { edit: shop ? true : false, id: shop ? shop.id : '' }) }}>
                                                     <View style={{ height: 40, width: 40, justifyContent: 'center', backgroundColor: '#80808033', alignItems: 'center', borderRadius: 20 }}>
                                                         <Image style={{ height: 18, width: 18 }} source={require("../../assets/pencil.png")} />
                                                     </View>
@@ -264,8 +387,12 @@ const CreateOrder = ({ navigation, route }) => {
 
                                         <View style={{ flexDirection: 'row', marginTop: 18, height: 28 }}>
                                             <View style={{ paddingBottom: 8, borderBottomWidth: 1, borderColor: '#80808033', flex: 1, justifyContent: 'center' }}>
-                                                <Picker>
+                                                <Picker selectedValue={dataAddressInfo.takeTime}
+                                                    onValueChange={(itemValue) => { handleOnChangeAddressInfo(itemValue, 'takeTime') }} >
                                                     <Picker.Item style={{ color: '#5D5D5D' }} key={0} label="Chọn ca lấy hàng" value={0} />
+                                                    {hours + 1 < 12 ? <Picker.Item style={{ color: '#5D5D5D' }} key={1} label={`Ca lấy ${timeString} (7h00-12h00)`} value={1} /> : ""}
+                                                    {hours + 1 < 18 ? <Picker.Item style={{ color: '#5D5D5D' }} key={2} label={`Ca lấy ${timeString} (12h00-18h00)`} value={2} /> : ""}
+                                                    <Picker.Item style={{ color: '#5D5D5D' }} key={3} label={`Ca lấy ${timeNextDayString} (7h00-12h00)`} value={3} />
                                                 </Picker>
                                             </View>
                                         </View>
@@ -282,10 +409,13 @@ const CreateOrder = ({ navigation, route }) => {
                                     </View>
 
                                 </View>
-                                <TouchableOpacity style={{
+                                <TouchableOpacity disabled={!isDataAddressValid} style={isDataAddressValid ? {
+                                    height: 40, backgroundColor: '#DF6032', borderBottomRightRadius: 14, borderBottomLeftRadius: 14, marginTop: 8, justifyContent: 'center',
+                                    alignItems: 'center'
+                                } : {
                                     height: 40, backgroundColor: '#AFAFAF', borderBottomRightRadius: 14, borderBottomLeftRadius: 14, marginTop: 8, justifyContent: 'center',
                                     alignItems: 'center'
-                                }}>
+                                }} onPress={() => setIsCollapseAddressInfo(true)}>
                                     <Text style={{ color: 'white', fontSize: 18, fontWeight: '500' }}>TIẾP THEO</Text>
                                 </TouchableOpacity>
                             </View>
@@ -308,10 +438,10 @@ const CreateOrder = ({ navigation, route }) => {
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#DF6032' }}>| {isCollapseOrderInfo ? 'HÀNG HÓA - CƯỚC PHÍ' : "SẢN PHẨM"}</Text>
                                 {isCollapseOrderInfo ? '' :
-                                    <View style={{ marginLeft: 12, paddingHorizontal: 8, paddingVertical: 6, backgroundColor: '#80808033', borderRadius: 8, flexDirection: 'row', alignItems: 'center' }}>
+                                    <TouchableOpacity style={{ marginLeft: 12, paddingHorizontal: 8, paddingVertical: 6, backgroundColor: '#80808033', borderRadius: 8, flexDirection: 'row', alignItems: 'center' }}>
                                         <Image style={{ height: 20, width: 20 }} source={require("../../assets/plus.png")} />
                                         <Text style={{ marginLeft: 4, color: '#1F4656', fontWeight: 'bold' }}>SP có sẵn</Text>
-                                    </View>
+                                    </TouchableOpacity>
                                 }
 
                             </View>
@@ -340,49 +470,14 @@ const CreateOrder = ({ navigation, route }) => {
                                 </View>
                                 :
                                 <View>
-                                    <View style={{ flex: 1, paddingHorizontal: 4, paddingVertical: 8, borderWidth: 1, borderRadius: 5, borderColor: '#80808033', marginBottom: 8, marginTop: 8 }}>
-                                        <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-                                            <Text style={{ marginRight: 4, flex: 4 }}>1.</Text>
-                                            <TextInput style={{ flex: 66, paddingBottom: 10, borderBottomWidth: 1, marginRight: 12, borderColor: '#808080' }} placeholder="Tên sản phẩm"></TextInput>
-                                            <TextInput style={{ flex: 30, paddingBottom: 10, borderBottomWidth: 1, borderColor: '#808080' }} placeholder="Mã SP"></TextInput>
+                                    {renderProductInputs()}
+                                    <TouchableOpacity onPress={addProduct} style={{ height: 40, backgroundColor: '#80808033', marginTop: 12, alignItems: 'center', justifyContent: 'center', borderRadius: 8 }}>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                            <Image style={{ height: 22, width: 22, marginLeft: 8, marginTop: 4 }} source={require("../../assets/plus.png")} />
+                                            <Text style={{ fontSize: 16, marginLeft: 8 }}>Thêm sản phẩm</Text>
                                         </View>
-                                        <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', marginTop: 12 }}>
-                                            <Text style={{ marginRight: 4, flex: 20 }}>KL (gam)</Text>
-                                            <TextInput style={{ flex: 50, paddingBottom: 10, borderBottomWidth: 1, marginRight: 12, borderColor: '#808080' }} placeholder="KL sản phẩm"></TextInput>
-                                            <View style={{ flex: 30, borderBottomWidth: 1, borderColor: '#808080' }} placeholder="Mã SP">
-                                                <Picker>
-                                                    {numbers.map((number) => (
-                                                        <Picker.Item key={number} label={number} value={number} />
-                                                    ))}
-                                                </Picker>
-                                            </View>
-                                        </View>
-                                        <TouchableOpacity style={{ height: 40, backgroundColor: '#80808033', marginTop: 12, alignItems: 'center', justifyContent: 'center', borderRadius: 8 }}>
-                                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                                                <Image style={{ height: 22, width: 22, marginLeft: 8, marginTop: 4 }} source={require("../../assets/plus.png")} />
-                                                <Text style={{ fontSize: 16, marginLeft: 8 }}>Thêm sản phẩm</Text>
-                                            </View>
-                                        </TouchableOpacity>
-                                    </View>
-                                    <View>
-                                        <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#DF6032', marginBottom: 12 }}>| THÔNG TIN GÓI HÀNG</Text>
-                                        <View style={{ flex: 1, paddingHorizontal: 4, paddingVertical: 12, borderWidth: 1, borderRadius: 5, borderColor: '#80808033', flexDirection: 'row' }}>
-                                            <TouchableOpacity onPress={chooseImage} style={{ flex: 12, height: 40, width: 40, alignItems: 'center', justifyContent: 'center', backgroundColor: '#80808033', borderRadius: 20 }}>
-                                                {image ?
-                                                    <Image source={image} style={{ height: '100%', width: '100%' }} />
-                                                    :
-                                                    <Text style={{ fontSize: 12, color: '#1F4656' }}>Up ảnh</Text>}
-                                            </TouchableOpacity>
-                                            <View style={{ flex: 5 }}></View>
-                                            <View style={{ flex: 85, flexDirection: 'row' }}>
-                                                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-                                                    <Text style={{ marginRight: 4, flex: 34 }}>Tổng KL (gam)</Text>
-                                                    <TextInput style={{ flex: 66, paddingBottom: 4, borderBottomWidth: 1, marginRight: 12, borderColor: '#808080' }} placeholder="Khối lượng sản phẩm" editable={false}></TextInput>
-
-                                                </View>
-                                            </View>
-                                        </View>
-                                    </View>
+                                    </TouchableOpacity>
+                                    {/* ... Other parts of your component */}
                                 </View>
                         }
                     </View>
@@ -397,7 +492,7 @@ const CreateOrder = ({ navigation, route }) => {
                                     <View>
                                         <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
                                             <Text style={{ marginRight: 4, flex: 15 }}>Thu hộ</Text>
-                                            <TextInput style={{ flex: 85, paddingBottom: 4, borderBottomWidth: 1, marginRight: 12, borderColor: '#808080' }} placeholder="Khối lượng sản phẩm" editable={false}></TextInput>
+                                            <TextInput style={{ flex: 85, paddingBottom: 4, borderBottomWidth: 1, marginRight: 12, borderColor: '#808080' }} placeholder="COD" editable={false}></TextInput>
                                         </View>
                                     </View>
                                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 12 }} >

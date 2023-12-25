@@ -59,7 +59,7 @@ const Order = ({ navigation }) => {
 
     const onCreateOrder = () => {
         if (selectedShop) {
-            navigation.navigate('CreateOrder', { shop: selectedShop })
+            navigation.navigate('CreateOrder', { shopId: selectedShop.id })
         }
         else {
             Toast.show({
