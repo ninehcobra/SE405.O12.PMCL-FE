@@ -22,12 +22,12 @@ const MainScreen = ({ navigation }) => {
 
 
     const renderScene = BottomNavigation.SceneMap({
-        Home: Home,
-        Order: () => <Order navigation={navigation} />,
-        Chat: Chat,
-        Reconciliation: Reconciliation,
-        Complain: Complain,
-        User: () => <User navigation={navigation} />
+        Home: () => <Home key="Home" navigation={navigation} />,
+        Order: () => <Order key="Order" navigation={navigation} />,
+        Chat: () => <Chat key="Chat" />,
+        Reconciliation: () => <Reconciliation key="Reconciliation" />,
+        Complain: () => <Complain key="Complain" />,
+        User: () => <User key="User" navigation={navigation} />,
     });
 
     return (

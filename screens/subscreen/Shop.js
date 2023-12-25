@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { View, Text, TouchableOpacity, Image, ScrollView, Dimensions } from "react-native"
 import { getOwnShop, changeSelectedShop } from "../../services/shopService"
-import { ShopItem } from "./components/ShopItem"
+
 import Toast from "react-native-toast-message"
 
 const Shop = ({ navigation }) => {

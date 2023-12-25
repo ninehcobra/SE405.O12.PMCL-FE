@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import * as ImagePicker from 'expo-image-picker';
 import { getAllProvince, getDistrictById } from "../../services/addressService";
 
-const CreateOrder = ({ navigation }) => {
+const CreateOrder = ({ navigation, route }) => {
 
     const [dataAddressInfo, setDataAddressInfo] = useState({
         recPhoneNumber: '',
@@ -69,6 +69,8 @@ const CreateOrder = ({ navigation }) => {
 
         fetchDistrictById(dataAddressInfo.recProvinceId)
     }, [dataAddressInfo.recProvinceId])
+
+    console.log(route.params?.shop)
 
     return (
 
