@@ -13,6 +13,8 @@ import Hierarchy from './screens/subscreen/Hierarchy';
 import UserDetail from './screens/subscreen/UserDetail';
 import CreateOrder from './screens/subscreen/CreateOrder';
 import CreateShop from './screens/subscreen/CreateShop'
+import AboutUs from './screens/subscreen/AboutUs';
+import ChangePassword from './screens/subscreen/ChangePassword';
 
 export default function App() {
 
@@ -33,6 +35,8 @@ export default function App() {
           <Stack.Screen name='UserDetail' component={UserDetail} options={{ gestureEnabled: false }} />
           <Stack.Screen name='CreateOrder' component={CreateOrder} options={{ gestureEnabled: false }} />
           <Stack.Screen name='CreateShop' component={CreateShop} options={{ gestureEnabled: false }} />
+          <Stack.Screen name='AboutUs' component={AboutUs} options={{ gestureEnabled: false }} />
+          <Stack.Screen name='ChangePassword' component={ChangePassword} options={{ gestureEnabled: false }} />
         </Stack.Navigator>
         <Toast />
       </NavigationContainer>

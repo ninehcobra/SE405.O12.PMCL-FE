@@ -116,28 +116,29 @@ const Register = ({ route, navigation }) => {
         if (type === 'address') { setAddress(text) }
         if (type === 'rePassword') { setRePassword(text) }
     }
-
-
-    useEffect(() => {
-        const fetchProvince = async () => {
-            try {
-                const responseData = await getAllProvince();
-                setProvince(responseData.DT);
-            } catch (error) {
-                // Xử lý lỗi nếu cần thiết
-                console.log('Lỗi khi lấy dữ liệutừ API:', error);
-            }
-        };
-
-        const fetchDistrict = async (id) => {
-            try {
-                const responseData = await getDistrictById(id);
-                setDistrict(responseData.data.data);
-            } catch (error) {
-                // Xử lý lỗi nếu cần thiết
-                console.log('Lỗi khi lấy dữ liệutừ API:', error);
-            }
+    const fetchProvince = async () => {
+        try {
+            const responseData = await getAllProvince();
+            setProvince(responseData.DT);
+        } catch (error) {
+            // Xử lý lỗi nếu cần thiết
+            console.log('Lỗi khi lấy dữ liệutừ API:', error);
         }
+    };
+
+    const fetchDistrict = async (id) => {
+        try {
+            const responseData = await getDistrictById(id);
+            setDistrict(responseData.DT);
+        } catch (error) {
+            // Xử lý lỗi nếu cần thiết
+            console.log('Lỗi khi lấy dữ liệutừ API:', error);
+        }
+    }
+    useEffect(() => {
+
+        fetchProvince()
+
 
 
         console.log(selectedProvince)

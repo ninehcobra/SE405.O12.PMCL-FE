@@ -173,7 +173,7 @@ const Login = ({ route, navigation }) => {
 
                         </View>
 
-                        <TextInput onChangeText={(text) => handleOnChange(text, 'password')} value={password} placeholder="Nhập mật khẩu của bạn" style={{
+                        <TextInput secureTextEntry={true} onChangeText={(text) => handleOnChange(text, 'password')} value={password} placeholder="Nhập mật khẩu của bạn" style={{
                             color: 'blue',
                             height: 45,
                             width: 360,

@@ -65,7 +65,7 @@ const Shop = ({ navigation }) => {
                 {shops ? shops.map((shop) => {
 
                     return (
-                        <View style={{ backgroundColor: 'white', marginHorizontal: 12, marginBottom: 12, borderRadius: 10 }}>
+                        <View key={shop.id} style={{ backgroundColor: 'white', marginHorizontal: 12, marginBottom: 12, borderRadius: 10 }}>
                             <View style={{ padding: 10 }}>
                                 <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
                                     <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#DF6032' }}>{shop.id} - {shop.name}</Text>

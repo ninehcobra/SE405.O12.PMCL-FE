@@ -39,7 +39,7 @@ const Reconciliation = () => {
                             </Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={{ marginLeft: 20 }} onPress={() => setIsChoosen(1)}>
+                        <TouchableOpacity disabled={true} style={{ marginLeft: 20 }} onPress={() => setIsChoosen(1)}>
                             <Text style={isChoosen === 1 ? { color: '#01466D', fontSize: 15, fontWeight: 'bold', borderBottomColor: "#F46624", borderBottomWidth: 2, padding: 10 } : { color: "#19374F", fontSize: 14, fontWeight: 'bold' }}>
                                 Coming soon
                             </Text>

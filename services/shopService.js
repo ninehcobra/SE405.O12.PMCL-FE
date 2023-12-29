@@ -63,10 +63,49 @@ const updateShop = async (data) => {
     }
 }
 
+const createProduct = async (data) => {
+    try {
+        let res = await axios.post(`api/create-product`, data)
+        return res
+    } catch (error) {
+        return {
+            EC: -5,
+            EM: 'Lỗi khi gửi truy vấn'
+        }
+    }
+}
+
+const getShopProduct = async (id) => {
+    try {
+        let res = await axios.get(`api/product?shopId=${id}`)
+        return res
+    } catch (error) {
+        return {
+            EC: -5,
+            EM: 'Lỗi khi gửi truy vấn'
+        }
+    }
+}
+
+const deleteProduct = async (id) => {
+    try {
+        let res = await axios.post(`api/delete-product`, { id: id })
+        return res
+    } catch (error) {
+        return {
+            EC: -5,
+            EM: 'Lỗi khi gửi truy vấn'
+        }
+    }
+}
+
 export {
     createShop,
     getOwnShop,
     changeSelectedShop,
     getShopById,
-    updateShop
+    updateShop,
+    createProduct,
+    getShopProduct,
+    deleteProduct
 }   

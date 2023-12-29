@@ -1,5 +1,7 @@
 import axios from 'axios'
 import SyncStorage from 'sync-storage';
+import { useNavigation } from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
 
 
 // Set config defaults when creating the instance
@@ -29,15 +31,22 @@ instance.interceptors.request.use(function (config) {
 instance.interceptors.response.use(function (response) {
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
+
     return response.data;
+
 }, function (err) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
     const status = err.response?.status || 500
+    const navigation = useNavigation();
+
+    console.log(2)
+
     switch (status) {
         // authentication (token related issues)
         case 401: {
-
+            navigation.dispatch(StackActions.replace('Login'))
+            console.log('loi ne')
             return {
                 err
             }

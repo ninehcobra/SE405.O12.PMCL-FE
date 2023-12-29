@@ -2,9 +2,58 @@ import { View, Text, TouchableOpacity, TextInput, Image, ScrollView } from "reac
 import { StackActions } from "@react-navigation/native"
 import { IconButton } from "react-native-paper"
 import { useDispatch, useSelector } from 'react-redux'
+import { useEffect, useState } from "react"
+import { handleUpdateUserInfo, handleGetAccountInfo } from "../../services/userService"
+import { getOwnShop } from "../../services/shopService"
+import Toast from "react-native-toast-message"
 
 const User = ({ navigation }) => {
-    const info = useSelector((state) => state.personalInfo)
+    const [info, setInfo] = useState({
+        name: '',
+        phoneNumber: '',
+        email: '',
+        id: ''
+    })
+    const [shopId, setShopId] = useState(null)
+
+    const fetchMyShop = async () => {
+        let res = await getOwnShop()
+
+        if (res && res.EC === 0) {
+            res.DT.map((shop) => {
+                if (shop.isSelected === true) {
+                    setShopId(shop.id)
+                }
+            })
+        }
+
+    }
+
+    const fetchInfo = async () => {
+        let data = { ...info }
+        let res = await handleGetAccountInfo()
+
+        if (res.EC === 0) {
+            data.name = res.DT.name
+            data.phoneNumber = res.DT.phoneNumber
+            data.email = res.DT.email
+            data.id = res.DT.id
+        }
+        setInfo(data)
+    }
+
+    useEffect(() => {
+        fetchInfo()
+
+        fetchMyShop()
+        const unsubcribe = navigation.addListener('focus', () => {
+            fetchMyShop()
+            fetchInfo()
+        })
+
+        return unsubcribe
+    }, [navigation])
+
     return (
         <View style={{ flex: 1 }}>
             <View >
@@ -31,7 +80,7 @@ const User = ({ navigation }) => {
                 <View style={{ flex: 80, marginTop: 10 }}>
                     <Text style={{ fontSize: 14, color: '#01466D', fontWeight: 'bold', marginBottom: 2 }}>{info.name} - {info.phoneNumber}</Text>
                     <Text style={{ fontSize: 14, color: '#F16728', fontWeight: 'bold', marginBottom: 2 }}>ID khách hàng - {info.id}</Text>
-                    <Text style={{ fontSize: 14, color: '#F16728', fontWeight: 'bold', marginBottom: 2 }}>ID shop - {info.idShop}</Text>
+                    <Text style={{ fontSize: 14, color: '#F16728', fontWeight: 'bold', marginBottom: 2 }}>ID shop - {shopId ? shopId : 'Chưa có cửa hàng'}</Text>
                     <Text style={{ fontSize: 13, color: '#454545', fontWeight: 'bold', marginBottom: 2 }}>{info.email}</Text>
                     <Text style={{ fontSize: 13, color: '#454545', fontWeight: 'bold' }}>Phiên bản 1.0.0</Text>
                 </View>
@@ -79,13 +128,15 @@ const User = ({ navigation }) => {
                         <View style={{ flex: 1 }}></View>
                         <Image style={{ height: 15, width: 15, marginRight: 10 }} source={require("../../assets/right-arrow.png")}></Image>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => { navigation.navigate('Hierarchy') }} style={{ height: 50, flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderColor: 'rgba(69, 69, 69, 0.2)' }}>
-                        <Image style={{ height: 35, width: 35, marginLeft: 10 }} source={require("../../assets/profile.png")}></Image>
-                        <Text style={{ color: '#01466D', fontSize: 14, fontWeight: 'bold', marginLeft: 20 }}>Phân quyền</Text>
-                        <View style={{ flex: 1 }}></View>
-                        <Image style={{ height: 15, width: 15, marginRight: 10 }} source={require("../../assets/right-arrow.png")}></Image>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ height: 50, flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderColor: 'rgba(69, 69, 69, 0.2)' }}>
+
+                    <TouchableOpacity onPress={() => {
+                        Toast.show({
+                            type: 'error',
+                            text1: 'Thông báo',
+                            text2: 'Chức năng này đang được hoàn thiện',
+                            position: 'top'
+                        })
+                    }} style={{ height: 50, flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderColor: 'rgba(69, 69, 69, 0.2)' }}>
                         <Image style={{ height: 35, width: 35, marginLeft: 10 }} source={require("../../assets/credit-card.png")}></Image>
                         <Text style={{ color: '#01466D', fontSize: 14, fontWeight: 'bold', marginLeft: 20 }}>Tài khoản ngân hàng</Text>
                         <View style={{ flex: 1 }}></View>
@@ -97,13 +148,7 @@ const User = ({ navigation }) => {
                         <View style={{ flex: 1 }}></View>
                         <Image style={{ height: 15, width: 15, marginRight: 10 }} source={require("../../assets/right-arrow.png")}></Image>
                     </TouchableOpacity>
-                    <TouchableOpacity style={{ height: 50, flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderColor: 'rgba(69, 69, 69, 0.2)' }}>
-                        <Image style={{ height: 35, width: 35, marginLeft: 10 }} source={require("../../assets/arrows.png")}></Image>
-                        <Text style={{ color: '#01466D', fontSize: 14, fontWeight: 'bold', marginLeft: 20 }}>Thiết lập măc định khi lên đơn</Text>
-                        <View style={{ flex: 1 }}></View>
-                        <Image style={{ height: 15, width: 15, marginRight: 10 }} source={require("../../assets/right-arrow.png")}></Image>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                    <TouchableOpacity onPress={() => { navigation.navigate('AboutUs') }} style={{ height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
 
                         <Text style={{ color: '#01466D', fontSize: 14, fontWeight: 'bold', marginLeft: 20 }}>Về doanh nghiệp</Text>
                     </TouchableOpacity>
