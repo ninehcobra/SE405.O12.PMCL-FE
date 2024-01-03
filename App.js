@@ -15,6 +15,8 @@ import CreateOrder from './screens/subscreen/CreateOrder';
 import CreateShop from './screens/subscreen/CreateShop'
 import AboutUs from './screens/subscreen/AboutUs';
 import ChangePassword from './screens/subscreen/ChangePassword';
+import Search from './screens/subscreen/Search';
+import Tracking from './screens/subscreen/Tracking';
 
 export default function App() {
 
@@ -37,6 +39,8 @@ export default function App() {
           <Stack.Screen name='CreateShop' component={CreateShop} options={{ gestureEnabled: false }} />
           <Stack.Screen name='AboutUs' component={AboutUs} options={{ gestureEnabled: false }} />
           <Stack.Screen name='ChangePassword' component={ChangePassword} options={{ gestureEnabled: false }} />
+          <Stack.Screen name='Search' component={Search} options={{ gestureEnabled: false }} />
+          <Stack.Screen name='Tracking' component={Tracking} options={{ gestureEnabled: false }} />
         </Stack.Navigator>
         <Toast />
       </NavigationContainer>

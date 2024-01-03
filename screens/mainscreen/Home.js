@@ -5,12 +5,14 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux'
 import { getOwnShop, changeSelectedShop } from "../../services/shopService"
 import Toast from "react-native-toast-message"
+import { getTotalCOD } from "../../services/orderService";
 
 const Home = ({ navigation }) => {
     const [isChoosen, setIsChoosen] = useState(0)
     const [shopArr, setShopArr] = useState(null)
     const [modalShop, setModalShop] = useState(false)
     const [selectedShop, setSelectedShop] = useState(null)
+    const [totalCOD, setTotalCOD] = useState(0)
 
     const info = useSelector((state) => state.personalInfo)
 
@@ -18,9 +20,14 @@ const Home = ({ navigation }) => {
         let res = await getOwnShop()
         if (res.EC === 0 && res.DT.length >= 1) {
             setShopArr(res.DT)
-            res.DT.map((shop) => {
+            res.DT.map(async (shop) => {
                 if (shop.isSelected) {
                     setSelectedShop(shop)
+                    let data = await getTotalCOD(shop.id)
+                    if (data && data.EC === 0) {
+                        setTotalCOD(data.DT.totalCOD)
+                    }
+
                 }
             })
         }
@@ -77,14 +84,14 @@ const Home = ({ navigation }) => {
                         </View>
                     </View>
 
-                    <View style={{ height: 40, backgroundColor: '#F1F1F1', margin: 10, borderRadius: 20, flexDirection: 'row', alignItems: 'center' }}>
+                    <TouchableOpacity onPress={() => navigation.navigate("Search")} style={{ height: 40, backgroundColor: '#F1F1F1', margin: 10, borderRadius: 20, flexDirection: 'row', alignItems: 'center' }}>
                         <IconButton icon={'magnify'}>
 
                         </IconButton>
-                        <TextInput placeholder="Tìm kiếm">
+                        <TextInput editable={false} placeholder="Tìm kiếm">
 
                         </TextInput>
-                    </View>
+                    </TouchableOpacity>
 
                     <View style={{ height: 100, backgroundColor: '#FFF0D3', borderRadius: 20, margin: 10, flexDirection: 'row' }}>
                         <View style={{ flex: 40, alignItems: "center", justifyContent: "center" }}>
@@ -103,9 +110,7 @@ const Home = ({ navigation }) => {
                                 <Text style={isChoosen === 0 ? { color: '#F46624', fontSize: 17, fontWeight: 'bold', borderBottomColor: "#F46624", borderBottomWidth: 2, padding: 10 } : { color: "#19374F", fontSize: 14, fontWeight: 'bold' }}>Dòng tiền</Text>
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={{ marginLeft: 20 }} onPress={() => setIsChoosen(1)}>
-                                <Text style={isChoosen === 1 ? { color: '#F46624', fontSize: 17, fontWeight: 'bold', borderBottomColor: "#F46624", borderBottomWidth: 2, padding: 10 } : { color: "#19374F", fontSize: 14, fontWeight: 'bold' }}>Vận hành</Text>
-                            </TouchableOpacity>
+
 
                         </View>
                     </View>
@@ -113,7 +118,7 @@ const Home = ({ navigation }) => {
                     <ScrollView>
                         {
                             isChoosen === 0 ?
-                                < View style={{ height: 500, marginTop: 15, marginLeft: 10, marginRight: 10 }}>
+                                < View style={{ height: 300, marginTop: 15, marginLeft: 10, marginRight: 10 }}>
                                     <View style={{ marginBottom: 5 }}>
                                         <Text style={{ fontWeight: 'bold', fontSize: 16, color: '#01466D' }}>
                                             Dòng tiền
@@ -135,7 +140,7 @@ const Home = ({ navigation }) => {
 
                                                 </View>
                                                 <View style={{ flex: 1 }}></View>
-                                                <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>O vnđ</Text>
+                                                <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>{totalCOD} vnđ</Text>
                                             </View>
 
                                             <View style={{ height: 20, marginTop: 4, paddingRight: 10, flexDirection: 'row', alignItems: 'center' }}>
@@ -184,58 +189,11 @@ const Home = ({ navigation }) => {
 
 
                                         {/* Số dư đang xử lý */}
-                                        <View style={{ borderBottomWidth: 1, marginRight: 10, marginTop: 5, borderColor: 'white', marginLeft: 28 }}></View>
-                                        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }} >
-                                            <View style={{ height: 18, backgroundColor: 'red', width: 6 }}>
-                                            </View>
-                                            <Text style={{ color: 'white', fontSize: 14, fontWeight: 'bold', marginLeft: 10 }}>
-                                                Số dư đang xử lý (GHLE giữ lại)
-                                            </Text>
-                                        </View>
-                                        <View style={{ height: 200, marginLeft: 28 }}>
-                                            <View style={{ height: 20, marginTop: 8, paddingRight: 10, flexDirection: 'row', alignItems: 'center' }}>
-                                                <View style={{ flexDirection: 'row' }}>
-                                                    <Text style={{ color: 'white' }}>Số dư qua ví</Text>
-
-                                                </View>
-                                                <View style={{ flex: 1 }}></View>
-                                                <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>O vnđ</Text>
-                                            </View>
-
-                                            <View style={{ height: 20, marginTop: 4, paddingRight: 10, flexDirection: 'row', alignItems: 'center' }}>
-                                                <View style={{ flexDirection: 'row' }}>
-                                                    <Text style={{ color: 'white' }}>Giao thất bại - thu tiền / đang xử lý</Text>
-
-                                                </View>
-                                                <View style={{ flex: 1 }}></View>
-                                                <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>O vnđ</Text>
-                                            </View>
-
-                                            <View style={{ height: 20, marginTop: 4, paddingRight: 10, flexDirection: 'row', alignItems: 'center' }}>
-                                                <View style={{ flexDirection: 'row' }}>
-                                                    <Text style={{ color: 'white' }}>COD hàng lưu kho / đang xử lý</Text>
-
-                                                </View>
-                                                <View style={{ flex: 1 }}></View>
-                                                <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>O vnđ</Text>
-                                            </View>
-
-                                            <View style={{ borderBottomWidth: 1, marginRight: 10, marginTop: 5, borderColor: 'white' }}></View>
-                                            <View style={{ height: 20, marginTop: 4, paddingRight: 10, flexDirection: 'row', alignItems: 'center' }}>
-                                                <View style={{ flexDirection: 'row' }}>
-                                                    <Text style={{ color: 'white' }}>Tổng số dư còn lại</Text>
-
-                                                </View>
-                                                <View style={{ flex: 1 }}></View>
-                                                <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>O vnđ</Text>
-                                            </View>
-
-                                            <View style={{ height: 60, backgroundColor: 'white', marginRight: 28, borderRadius: 20, marginTop: 10, justifyContent: 'center', padding: 10 }}>
-                                                <Text style={{ fontWeight: 'bold', color: "#F46624" }}>*Tổng số dư hiện tại=Số dư ví - COD hàng lưu kho / đang xử lý</Text>
-                                            </View>
 
 
-                                        </View>
+
+
+
                                     </View>
 
 

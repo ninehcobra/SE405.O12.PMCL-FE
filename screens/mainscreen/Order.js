@@ -95,14 +95,14 @@ const Order = ({ navigation }) => {
                         </View>
                     </View>
 
-                    <View style={{ height: 40, backgroundColor: '#F1F1F1', margin: 10, borderRadius: 20, flexDirection: 'row', alignItems: 'center' }}>
+                    <TouchableOpacity onPress={() => navigation.navigate("Search")} style={{ height: 40, backgroundColor: '#F1F1F1', margin: 10, borderRadius: 20, flexDirection: 'row', alignItems: 'center' }}>
                         <IconButton icon={'magnify'}>
 
                         </IconButton>
-                        <TextInput placeholder="Tìm kiếm">
+                        <TextInput editable={false} placeholder="Tìm kiếm">
 
                         </TextInput>
-                    </View>
+                    </TouchableOpacity>
                 </View>
 
                 <View >
@@ -119,11 +119,6 @@ const Order = ({ navigation }) => {
                             </Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={{ marginLeft: 20 }} onPress={() => setIsChoosen(2)}>
-                            <Text style={isChoosen === 2 ? { color: '#F46624', fontSize: 15, fontWeight: 'bold', borderBottomColor: "#F46624", borderBottomWidth: 2, padding: 10 } : { color: "#19374F", fontSize: 14, fontWeight: 'bold' }}>
-                                ĐH nháp
-                            </Text>
-                        </TouchableOpacity>
 
                     </View>
                 </View>

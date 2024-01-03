@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { View, Text, TouchableOpacity, Image, ScrollView, Dimensions } from "react-native"
-import { getOwnShop, changeSelectedShop } from "../../services/shopService"
+import { getOwnShop, changeSelectedShop, deleteShop } from "../../services/shopService"
 
 import Toast from "react-native-toast-message"
 
@@ -38,6 +38,27 @@ const Shop = ({ navigation }) => {
         }
 
         setIsUpdate(!isUpdate)
+    }
+
+    const handleDeleteShop = async (id) => {
+        let res = await deleteShop(id)
+        if (res && res.EC === 0) {
+            await fetchMyShop()
+            Toast.show({
+                type: 'success',
+                text1: 'Thông báo',
+                text2: `Xóa thành công`,
+                position: 'top'
+            })
+        }
+        if (res && res.EC === -4) {
+            Toast.show({
+                type: 'error',
+                text1: 'Thông báo',
+                text2: `Bạn đang chọn cửa hàng này. Không thể xóa!!`,
+                position: 'top'
+            })
+        }
     }
 
     return (
@@ -81,13 +102,22 @@ const Shop = ({ navigation }) => {
                                 <Text style={{ fontSize: 14, fontWeight: 500, color: '#1F4656' }}>{shop.phoneNumber}</Text>
                                 <Text style={{ fontSize: 14, fontWeight: 500, color: '#1F4656' }}>{shop.address}</Text>
                             </View>
-                            <TouchableOpacity onPress={() => { navigation.navigate('CreateShop', { edit: true, id: shop.id }) }} style={{
-                                flex: 1, height: 35, backgroundColor: '#80808033', borderBottomLeftRadius: 10,
-                                borderBottomRightRadius: 10, alignItems: "center", justifyContent: 'center', flexDirection: 'row'
-                            }}>
-                                <Image style={{ height: 16, width: 16, marginRight: 4 }} source={require("../../assets/pencil.png")} />
-                                <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#1F4656' }}>Sửa thông tin</Text>
-                            </TouchableOpacity>
+                            <View style={{ flexDirection: 'row' }}>
+                                <TouchableOpacity onPress={() => { navigation.navigate('CreateShop', { edit: true, id: shop.id }) }} style={{
+                                    flex: 50, height: 35, backgroundColor: '#80808033', borderBottomLeftRadius: 10,
+                                    alignItems: "center", justifyContent: 'center', flexDirection: 'row'
+                                }}>
+                                    <Image style={{ height: 16, width: 16, marginRight: 4 }} source={require("../../assets/pencil.png")} />
+                                    <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#1F4656' }}>Sửa thông tin</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => { handleDeleteShop(shop.id) }} style={{
+                                    flex: 50, height: 35, backgroundColor: '#80808033',
+                                    borderBottomRightRadius: 10, alignItems: "center", justifyContent: 'center', flexDirection: 'row', borderLeftWidth: 1, borderColor: '#1F4656'
+                                }}>
+                                    <Image style={{ height: 16, width: 16, marginRight: 4, }} source={require("../../assets/bin.png")} />
+                                    <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#1F4656' }}>Xóa cửa hàng</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     )
                 }) : ''}

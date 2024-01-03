@@ -482,7 +482,24 @@ const CreateOrder = ({ navigation, route }) => {
 
     const handleCreateOrder = async () => {
         let recInfo = { ...dataAddressInfo }
-        await createOrder({ recInfo, shop, products, fee, totalProductWeight, cod, payOption })
+        let res = await createOrder({ recInfo, shop, products, fee, totalProductWeight, cod, payOption })
+        if (res && res.EC === 0) {
+            Toast.show({
+                type: 'success',
+                text1: 'Thông báo',
+                text2: `Tạo đơn hàng thành công`,
+                position: 'top'
+            })
+            navigation.goBack()
+        }
+        else if (res && res.EC === -4) {
+            Toast.show({
+                type: 'error',
+                text1: 'Thông báo',
+                text2: `Hệ thống chưa hỗ trợ giao hàng ở đây. Mong gặp lại quý khách trong thời gian tới!!`,
+                position: 'top'
+            })
+        }
     }
 
     console.log(shop)
@@ -890,7 +907,7 @@ const CreateOrder = ({ navigation, route }) => {
                         <View style={{ flex: 50, alignItems: 'center', justifyContent: 'center', backgroundColor: '#1F4656', height: 55 }}>
                             <Text style={{ fontSize: 18, color: 'white', fontWeight: 500 }}>Lưu nháp</Text>
                         </View>
-                        <TouchableOpacity onPress={handleCreateOrder}
+                        <TouchableOpacity disabled={!isDataProductValid && !isDataAddressValid} onPress={handleCreateOrder}
                             style={isDataProductValid && isDataAddressValid
                                 ?
                                 { flex: 50, alignItems: 'center', justifyContent: 'center', height: 55, backgroundColor: '#DF6032' }

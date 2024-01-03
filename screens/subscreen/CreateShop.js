@@ -15,6 +15,7 @@ const Shop = ({ navigation, route }) => {
         provinceId: 0,
         districtId: 0
     })
+    const [isFetch, setIsFetch] = useState(true)
     const [isFetchDistrict, setIsFetchDistrict] = useState(false)
     const [arrProvince, setArrProvince] = useState(null)
     const [arrDistrict, setArrDistrict] = useState(null)
@@ -47,7 +48,7 @@ const Shop = ({ navigation, route }) => {
         let res = await getDistrictById(id)
         if (res.EC === 0) {
             setArrDistrict(res.DT)
-
+            setIsFetch(false)
         }
         else {
             setArrDistrict([])
@@ -82,9 +83,13 @@ const Shop = ({ navigation, route }) => {
             }
         }
 
+    }, [isFetchDistrict, isFetchDetailShop])
 
-        fetchDistrictById(shopData.provinceId)
-    }, [shopData.provinceId])
+    useEffect(() => {
+        if (shopData.provinceId !== 0) {
+            fetchDistrictById(shopData.provinceId);
+        }
+    }, [shopData.provinceId, arrProvince]);
 
     function isShopDataValid(data) {
         for (const key in data) {
@@ -148,8 +153,9 @@ const Shop = ({ navigation, route }) => {
         }
     }
 
-
+    console.log(shopData)
     return (
+
         <View style={{ backgroundColor: '#F7F7F7', minHeight: height }}>
             <View style={{ position: 'absolute', top: 0, left: 0, zIndex: 1, height: 55, width: width }}>
                 <View style={{ height: 55, alignItems: 'center', flexDirection: 'row', padding: 10, backgroundColor: 'white' }}>
@@ -195,7 +201,10 @@ const Shop = ({ navigation, route }) => {
                     <View style={{ flexDirection: 'row', marginTop: 18, height: 28 }}>
                         <View style={{ paddingBottom: 8, borderBottomWidth: 1, borderColor: '#80808033', flex: 1, justifyContent: 'center' }}>
                             <Picker selectedValue={shopData.provinceId}
-                                onValueChange={(itemValue) => { handleOnChange(itemValue, 'provinceId') }}>
+                                onValueChange={(itemValue) => {
+                                    handleOnChange(itemValue, 'provinceId')
+
+                                }}>
                                 <Picker.Item
                                     style={{ color: '#808080' }}
                                     key={0}
@@ -278,6 +287,7 @@ const Shop = ({ navigation, route }) => {
                 </TouchableOpacity>
             </View>
         </View >
+
     )
 }
 
